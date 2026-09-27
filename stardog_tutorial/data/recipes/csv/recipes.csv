@@ -1,0 +1,15 @@
+recipe_id,name,name_fr,cuisine,prep_minutes,servings,created,description
+R01,Spaghetti Carbonara,Spaghetti à la carbonara,Italian,20,2,2025-01-14,"Italian pasta tossed with egg, parmesan and crispy pancetta."
+R02,Margherita Pizza,Pizza Margherita,Italian,30,2,2025-02-03,"Thin-crust pizza with tomato, mozzarella and fresh basil."
+R03,Pad Thai,Pad thaï,Thai,25,2,2025-02-21,"Stir-fried rice noodles with shrimp, tofu, egg and peanuts."
+R04,Pesto Pasta,Pâtes au pesto,Italian,15,2,2025-03-09,Spaghetti with basil and pine nut pesto.
+R05,Chicken Stir Fry,Poulet sauté au wok,Chinese,25,3,2025-04-02,"Chicken and vegetables stir-fried in soy sauce and sesame oil, served with rice."
+R06,Grilled Salmon,Saumon grillé,Mediterranean,20,2,2025-04-18,"Salmon fillet grilled with lemon, garlic and olive oil."
+R07,Moules Marinieres,Moules marinières,French,25,2,2025-05-07,"Mussels steamed in white wine, garlic and cream."
+R08,Pancakes,Pancakes,American,20,4,2025-06-01,Fluffy breakfast pancakes.
+R09,Chocolate Brownies,Brownies au chocolat,American,45,12,2025-06-23,Fudgy chocolate brownies with toasted almonds.
+R10,Thai Green Curry,Curry vert thaï,Thai,35,4,2025-07-15,"Chicken simmered in coconut milk and green curry paste, served with rice."
+R11,Potato Salad,Salade de pommes de terre,German,30,4,2025-08-04,"Creamy potato salad with mayonnaise, mustard and celery."
+R12,Vegetable Soup,Soupe de légumes,French,40,4,2025-09-12,"Hearty soup of carrots, potatoes, celery and tomatoes."
+R13,Lupin Flatbread,Galette à la farine de lupin,Mediterranean,20,4,2025-10-06,High-protein flatbread made with lupin flour.
+R14,Crispy Chicken Tenders,Aiguillettes de poulet croustillantes,American,30,3,2025-11-19,"Breaded chicken strips, oven-baked."

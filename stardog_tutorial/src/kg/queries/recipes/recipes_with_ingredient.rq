@@ -1,0 +1,12 @@
+# Recipes that use an ingredient, found by (part of) its name, case-insensitive.
+# Parameters: ?search (text, e.g. "cheese")
+PREFIX rec:        <http://example.org/recipes#>
+
+SELECT DISTINCT ?recipe_name ?ingredient
+WHERE {
+  ?recipe a rec:Recipe ; rec:name ?recipe_name ; rec:hasIngredient ?i .
+  ?i rec:name ?ingredient .
+  FILTER(lang(?recipe_name) = "en")
+  FILTER(CONTAINS(LCASE(?ingredient), LCASE(?search)))
+}
+ORDER BY ?recipe_name

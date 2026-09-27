@@ -1,0 +1,29 @@
+category_id,name,parent_id
+food,Food,
+dairy,Dairy,food
+cheese,Cheese,dairy
+milk-cream,Milk & Cream,dairy
+grains,Grains & Cereals,food
+flour,Flour,grains
+pasta-noodles,Pasta & Noodles,grains
+bread,Bread & Crumbs,grains
+rice,Rice,grains
+protein,Protein,food
+meat,Meat,protein
+poultry,Poultry,meat
+pork,Pork,meat
+seafood,Seafood,protein
+fish,Fish,seafood
+shellfish,Shellfish,seafood
+eggs,Eggs,protein
+plant-protein,Plant Protein,protein
+nuts-seeds,Nuts & Seeds,plant-protein
+produce,Produce,food
+vegetables,Vegetables,produce
+fruit,Fruit,produce
+herbs,Herbs & Spices,produce
+pantry,Pantry,food
+oils,Oils,pantry
+sauces,Sauces & Condiments,pantry
+baking,Sweeteners & Baking,pantry
+wine,Wine,pantry

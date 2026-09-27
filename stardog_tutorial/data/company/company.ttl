@@ -1,0 +1,21 @@
+# Company / people dataset used in Chapters 1 and 2.
+@prefix co:   <http://example.org/company#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
+
+# Companies
+co:acme    a co:Company ; co:name "Acme Corp"  ; co:city "Bengaluru" ; co:industry "Software" .
+co:globex  a co:Company ; co:name "Globex Ltd" ; co:city "Pune"      ; co:industry "Consulting" .
+co:initech a co:Company ; co:name "Initech"    ; co:city "Hyderabad" ; co:industry "Software" .
+
+# People
+co:alice a co:Person ; co:name "Alice" ; co:age "30"^^xsd:integer ;
+         co:worksFor co:acme ; co:role "Data Engineer" ; co:knows co:bob, co:carol .
+co:bob   a co:Person ; co:name "Bob"   ; co:age "35"^^xsd:integer ;
+         co:worksFor co:acme ; co:role "Manager" ; co:knows co:dave .
+co:carol a co:Person ; co:name "Carol" ; co:age "28"^^xsd:integer ;
+         co:worksFor co:globex ; co:role "Data Scientist" ; co:knows co:alice .
+co:dave  a co:Person ; co:name "Dave"  ; co:age "42"^^xsd:integer ;
+         co:worksFor co:initech ; co:role "Architect" .
+co:eve   a co:Person ; co:name "Eve"   ; co:age "25"^^xsd:integer ;
+         co:worksFor co:globex ; co:role "Analyst" ; co:knows co:carol, co:dave .

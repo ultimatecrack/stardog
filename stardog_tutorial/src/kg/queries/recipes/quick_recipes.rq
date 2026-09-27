@@ -1,0 +1,11 @@
+# Recipes ready in at most ?max_minutes minutes.
+# Parameters: ?max_minutes (integer)
+PREFIX rec:        <http://example.org/recipes#>
+
+SELECT ?name ?cuisine ?minutes
+WHERE {
+  ?recipe a rec:Recipe ; rec:name ?name ; rec:cuisine ?cuisine ; rec:prepMinutes ?minutes .
+  FILTER(lang(?name) = "en")
+  FILTER(?minutes <= ?max_minutes)
+}
+ORDER BY ?minutes ?name

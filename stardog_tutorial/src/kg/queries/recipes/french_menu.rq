@@ -1,0 +1,11 @@
+# The menu in French, with the English description where there is one.
+# Parameters: none
+PREFIX rec:        <http://example.org/recipes#>
+
+SELECT ?nom ?cuisine ?minutes ?description
+WHERE {
+  ?recipe a rec:Recipe ; rec:name ?nom ; rec:cuisine ?cuisine ; rec:prepMinutes ?minutes .
+  FILTER(lang(?nom) = "fr")
+  OPTIONAL { ?recipe rec:description ?description }
+}
+ORDER BY ?nom

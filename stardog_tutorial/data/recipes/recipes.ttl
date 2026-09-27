@@ -1,0 +1,1043 @@
+# Recipes & Nutrition dataset, generated from data/recipes/csv by Chapter 3.
+@prefix allergen: <http://example.org/recipes/allergen/> .
+@prefix category: <http://example.org/recipes/category/> .
+@prefix ingredient: <http://example.org/recipes/ingredient/> .
+@prefix rec: <http://example.org/recipes#> .
+@prefix recipe: <http://example.org/recipes/recipe/> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+recipe:chicken-stir-fry a rec:Recipe ;
+    rec:created "2025-04-02"^^xsd:date ;
+    rec:cuisine "Chinese" ;
+    rec:description "Chicken and vegetables stir-fried in soy sauce and sesame oil, served with rice."@en ;
+    rec:hasIngredient ingredient:carrot,
+        ingredient:chicken-breast,
+        ingredient:garlic,
+        ingredient:onion,
+        ingredient:rice,
+        ingredient:sesame-oil,
+        ingredient:soy-sauce ;
+    rec:hasIngredientLine [ a rec:IngredientLine ;
+            rec:ingredient ingredient:chicken-breast ;
+            rec:quantity 400.0 ;
+            rec:unit "g" ],
+        [ a rec:IngredientLine ;
+            rec:ingredient ingredient:sesame-oil ;
+            rec:quantity 15.0 ;
+            rec:unit "ml" ],
+        [ a rec:IngredientLine ;
+            rec:ingredient ingredient:soy-sauce ;
+            rec:quantity 45.0 ;
+            rec:unit "ml" ],
+        [ a rec:IngredientLine ;
+            rec:ingredient ingredient:carrot ;
+            rec:quantity 150.0 ;
+            rec:unit "g" ],
+        [ a rec:IngredientLine ;
+            rec:ingredient ingredient:rice ;
+            rec:quantity 300.0 ;
+            rec:unit "g" ],
+        [ a rec:IngredientLine ;
+            rec:ingredient ingredient:onion ;
+            rec:quantity 1.0 ;
+            rec:unit "piece" ],
+        [ a rec:IngredientLine ;
+            rec:ingredient ingredient:garlic ;
+            rec:quantity 2.0 ;
+            rec:unit "clove" ] ;
+    rec:name "Chicken Stir Fry"@en,
+        "Poulet sauté au wok"@fr ;
+    rec:prepMinutes 25 ;
+    rec:recipeId "R05" ;
+    rec:servings 3 .
+
+recipe:chocolate-brownies a rec:Recipe ;
+    rec:created "2025-06-23"^^xsd:date ;
+    rec:cuisine "American" ;
+    rec:description "Fudgy chocolate brownies with toasted almonds."@en ;
+    rec:hasIngredient ingredient:almonds,
+        ingredient:butter,
+        ingredient:cocoa-powder,
+        ingredient:egg,
+        ingredient:sugar,
+        ingredient:wheat-flour ;
+    rec:hasIngredientLine [ a rec:IngredientLine ;
+            rec:ingredient ingredient:butter ;
+            rec:quantity 150.0 ;
+            rec:unit "g" ],
+        [ a rec:IngredientLine ;
+            rec:ingredient ingredient:sugar ;
+            rec:quantity 200.0 ;
+            rec:unit "g" ],
+        [ a rec:IngredientLine ;
+            rec:ingredient ingredient:egg ;
+            rec:quantity 3.0 ;
+            rec:unit "piece" ],
+        [ a rec:IngredientLine ;
+            rec:ingredient ingredient:wheat-flour ;
+            rec:quantity 100.0 ;
+            rec:unit "g" ],
+        [ a rec:IngredientLine ;
+            rec:ingredient ingredient:almonds ;
+            rec:quantity 50.0 ;
+            rec:unit "g" ],
+        [ a rec:IngredientLine ;
+            rec:ingredient ingredient:cocoa-powder ;
+            rec:quantity 60.0 ;
+            rec:unit "g" ] ;
+    rec:name "Chocolate Brownies"@en,
+        "Brownies au chocolat"@fr ;
+    rec:prepMinutes 45 ;
+    rec:recipeId "R09" ;
+    rec:servings 12 .
+
+recipe:crispy-chicken-tenders a rec:Recipe ;
+    rec:created "2025-11-19"^^xsd:date ;
+    rec:cuisine "American" ;
+    rec:description "Breaded chicken strips, oven-baked."@en ;
+    rec:hasIngredient ingredient:bread-crumbs,
+        ingredient:chicken-breast,
+        ingredient:egg,
+        ingredient:salt,
+        ingredient:wheat-flour ;
+    rec:hasIngredientLine [ a rec:IngredientLine ;
+            rec:ingredient ingredient:bread-crumbs ;
+            rec:quantity 100.0 ;
+            rec:unit "g" ],
+        [ a rec:IngredientLine ;
+            rec:ingredient ingredient:egg ;
+            rec:quantity 2.0 ;
+            rec:unit "piece" ],
+        [ a rec:IngredientLine ;
+            rec:ingredient ingredient:chicken-breast ;
+            rec:quantity 500.0 ;
+            rec:unit "g" ],
+        [ a rec:IngredientLine ;
+            rec:ingredient ingredient:wheat-flour ;
+            rec:quantity 50.0 ;
+            rec:unit "g" ],
+        [ a rec:IngredientLine ;
+            rec:ingredient ingredient:salt ;
+            rec:quantity 1.0 ;
+            rec:unit "tsp" ] ;
+    rec:name "Crispy Chicken Tenders"@en,
+        "Aiguillettes de poulet croustillantes"@fr ;
+    rec:prepMinutes 30 ;
+    rec:recipeId "R14" ;
+    rec:servings 3 .
+
+recipe:grilled-salmon a rec:Recipe ;
+    rec:created "2025-04-18"^^xsd:date ;
+    rec:cuisine "Mediterranean" ;
+    rec:description "Salmon fillet grilled with lemon, garlic and olive oil."@en ;
+    rec:hasIngredient ingredient:garlic,
+        ingredient:lemon,
+        ingredient:olive-oil,
+        ingredient:salmon,
+        ingredient:salt ;
+    rec:hasIngredientLine [ a rec:IngredientLine ;
+            rec:ingredient ingredient:salt ;
+            rec:quantity 1.0 ;
+            rec:unit "pinch" ],
+        [ a rec:IngredientLine ;
+            rec:ingredient ingredient:olive-oil ;
+            rec:quantity 15.0 ;
+            rec:unit "ml" ],
+        [ a rec:IngredientLine ;
+            rec:ingredient ingredient:lemon ;
+            rec:quantity 1.0 ;
+            rec:unit "piece" ],
+        [ a rec:IngredientLine ;
+            rec:ingredient ingredient:garlic ;
+            rec:quantity 1.0 ;
+            rec:unit "clove" ],
+        [ a rec:IngredientLine ;
+            rec:ingredient ingredient:salmon ;
+            rec:quantity 300.0 ;
+            rec:unit "g" ] ;
+    rec:name "Grilled Salmon"@en,
+        "Saumon grillé"@fr ;
+    rec:prepMinutes 20 ;
+    rec:recipeId "R06" ;
+    rec:servings 2 .
+
+recipe:lupin-flatbread a rec:Recipe ;
+    rec:created "2025-10-06"^^xsd:date ;
+    rec:cuisine "Mediterranean" ;
+    rec:description "High-protein flatbread made with lupin flour."@en ;
+    rec:hasIngredient ingredient:lupin-flour,
+        ingredient:olive-oil,
+        ingredient:salt ;
+    rec:hasIngredientLine [ a rec:IngredientLine ;
+            rec:ingredient ingredient:lupin-flour ;
+            rec:quantity 200.0 ;
+            rec:unit "g" ],
+        [ a rec:IngredientLine ;
+            rec:ingredient ingredient:olive-oil ;
+            rec:quantity 30.0 ;
+            rec:unit "ml" ],
+        [ a rec:IngredientLine ;
+            rec:ingredient ingredient:salt ;
+            rec:quantity 1.0 ;
+            rec:unit "tsp" ] ;
+    rec:name "Lupin Flatbread"@en,
+        "Galette à la farine de lupin"@fr ;
+    rec:prepMinutes 20 ;
+    rec:recipeId "R13" ;
+    rec:servings 4 .
+
+recipe:margherita-pizza a rec:Recipe ;
+    rec:created "2025-02-03"^^xsd:date ;
+    rec:cuisine "Italian" ;
+    rec:description "Thin-crust pizza with tomato, mozzarella and fresh basil."@en ;
+    rec:hasIngredient ingredient:basil,
+        ingredient:mozzarella,
+        ingredient:olive-oil,
+        ingredient:salt,
+        ingredient:tomato,
+        ingredient:wheat-flour ;
+    rec:hasIngredientLine [ a rec:IngredientLine ;
+            rec:ingredient ingredient:wheat-flour ;
+            rec:quantity 250.0 ;
+            rec:unit "g" ],
+        [ a rec:IngredientLine ;
+            rec:ingredient ingredient:mozzarella ;
+            rec:quantity 125.0 ;
+            rec:unit "g" ],
+        [ a rec:IngredientLine ;
+            rec:ingredient ingredient:olive-oil ;
+            rec:quantity 15.0 ;
+            rec:unit "ml" ],
+        [ a rec:IngredientLine ;
+            rec:ingredient ingredient:salt ;
+            rec:quantity 1.0 ;
+            rec:unit "tsp" ],
+        [ a rec:IngredientLine ;
+            rec:ingredient ingredient:basil ;
+            rec:quantity 5.0 ;
+            rec:unit "leaf" ],
+        [ a rec:IngredientLine ;
+            rec:ingredient ingredient:tomato ;
+            rec:quantity 200.0 ;
+            rec:unit "g" ] ;
+    rec:name "Margherita Pizza"@en,
+        "Pizza Margherita"@fr ;
+    rec:prepMinutes 30 ;
+    rec:recipeId "R02" ;
+    rec:servings 2 .
+
+recipe:moules-marinieres a rec:Recipe ;
+    rec:created "2025-05-07"^^xsd:date ;
+    rec:cuisine "French" ;
+    rec:description "Mussels steamed in white wine, garlic and cream."@en ;
+    rec:hasIngredient ingredient:butter,
+        ingredient:garlic,
+        ingredient:heavy-cream,
+        ingredient:mussels,
+        ingredient:onion,
+        ingredient:white-wine ;
+    rec:hasIngredientLine [ a rec:IngredientLine ;
+            rec:ingredient ingredient:onion ;
+            rec:quantity 1.0 ;
+            rec:unit "piece" ],
+        [ a rec:IngredientLine ;
+            rec:ingredient ingredient:white-wine ;
+            rec:quantity 150.0 ;
+            rec:unit "ml" ],
+        [ a rec:IngredientLine ;
+            rec:ingredient ingredient:butter ;
+            rec:quantity 30.0 ;
+            rec:unit "g" ],
+        [ a rec:IngredientLine ;
+            rec:ingredient ingredient:mussels ;
+            rec:quantity 1000.0 ;
+            rec:unit "g" ],
+        [ a rec:IngredientLine ;
+            rec:ingredient ingredient:garlic ;
+            rec:quantity 3.0 ;
+            rec:unit "clove" ],
+        [ a rec:IngredientLine ;
+            rec:ingredient ingredient:heavy-cream ;
+            rec:quantity 100.0 ;
+            rec:unit "ml" ] ;
+    rec:name "Moules Marinieres"@en,
+        "Moules marinières"@fr ;
+    rec:prepMinutes 25 ;
+    rec:recipeId "R07" ;
+    rec:servings 2 .
+
+recipe:pad-thai a rec:Recipe ;
+    rec:created "2025-02-21"^^xsd:date ;
+    rec:cuisine "Thai" ;
+    rec:description "Stir-fried rice noodles with shrimp, tofu, egg and peanuts."@en ;
+    rec:hasIngredient ingredient:egg,
+        ingredient:fish-sauce,
+        ingredient:garlic,
+        ingredient:lime,
+        ingredient:peanuts,
+        ingredient:rice-noodles,
+        ingredient:shrimp,
+        ingredient:tofu ;
+    rec:hasIngredientLine [ a rec:IngredientLine ;
+            rec:ingredient ingredient:tofu ;
+            rec:quantity 100.0 ;
+            rec:unit "g" ],
+        [ a rec:IngredientLine ;
+            rec:ingredient ingredient:fish-sauce ;
+            rec:quantity 30.0 ;
+            rec:unit "ml" ],
+        [ a rec:IngredientLine ;
+            rec:ingredient ingredient:egg ;
+            rec:quantity 2.0 ;
+            rec:unit "piece" ],
+        [ a rec:IngredientLine ;
+            rec:ingredient ingredient:lime ;
+            rec:quantity 1.0 ;
+            rec:unit "piece" ],
+        [ a rec:IngredientLine ;
+            rec:ingredient ingredient:shrimp ;
+            rec:quantity 150.0 ;
+            rec:unit "g" ],
+        [ a rec:IngredientLine ;
+            rec:ingredient ingredient:peanuts ;
+            rec:quantity 30.0 ;
+            rec:unit "g" ],
+        [ a rec:IngredientLine ;
+            rec:ingredient ingredient:garlic ;
+            rec:quantity 2.0 ;
+            rec:unit "clove" ],
+        [ a rec:IngredientLine ;
+            rec:ingredient ingredient:rice-noodles ;
+            rec:quantity 200.0 ;
+            rec:unit "g" ] ;
+    rec:name "Pad Thai"@en,
+        "Pad thaï"@fr ;
+    rec:prepMinutes 25 ;
+    rec:recipeId "R03" ;
+    rec:servings 2 .
+
+recipe:pancakes a rec:Recipe ;
+    rec:created "2025-06-01"^^xsd:date ;
+    rec:cuisine "American" ;
+    rec:description "Fluffy breakfast pancakes."@en ;
+    rec:hasIngredient ingredient:butter,
+        ingredient:egg,
+        ingredient:milk,
+        ingredient:salt,
+        ingredient:sugar,
+        ingredient:wheat-flour ;
+    rec:hasIngredientLine [ a rec:IngredientLine ;
+            rec:ingredient ingredient:milk ;
+            rec:quantity 300.0 ;
+            rec:unit "ml" ],
+        [ a rec:IngredientLine ;
+            rec:ingredient ingredient:egg ;
+            rec:quantity 2.0 ;
+            rec:unit "piece" ],
+        [ a rec:IngredientLine ;
+            rec:ingredient ingredient:sugar ;
+            rec:quantity 25.0 ;
+            rec:unit "g" ],
+        [ a rec:IngredientLine ;
+            rec:ingredient ingredient:wheat-flour ;
+            rec:quantity 200.0 ;
+            rec:unit "g" ],
+        [ a rec:IngredientLine ;
+            rec:ingredient ingredient:butter ;
+            rec:quantity 30.0 ;
+            rec:unit "g" ],
+        [ a rec:IngredientLine ;
+            rec:ingredient ingredient:salt ;
+            rec:quantity 1.0 ;
+            rec:unit "pinch" ] ;
+    rec:name "Pancakes"@en,
+        "Pancakes"@fr ;
+    rec:prepMinutes 20 ;
+    rec:recipeId "R08" ;
+    rec:servings 4 .
+
+recipe:pesto-pasta a rec:Recipe ;
+    rec:created "2025-03-09"^^xsd:date ;
+    rec:cuisine "Italian" ;
+    rec:description "Spaghetti with basil and pine nut pesto."@en ;
+    rec:hasIngredient ingredient:basil,
+        ingredient:garlic,
+        ingredient:olive-oil,
+        ingredient:parmesan-cheese,
+        ingredient:pine-nuts,
+        ingredient:spaghetti ;
+    rec:hasIngredientLine [ a rec:IngredientLine ;
+            rec:ingredient ingredient:basil ;
+            rec:quantity 40.0 ;
+            rec:unit "g" ],
+        [ a rec:IngredientLine ;
+            rec:ingredient ingredient:olive-oil ;
+            rec:quantity 60.0 ;
+            rec:unit "ml" ],
+        [ a rec:IngredientLine ;
+            rec:ingredient ingredient:spaghetti ;
+            rec:quantity 200.0 ;
+            rec:unit "g" ],
+        [ a rec:IngredientLine ;
+            rec:ingredient ingredient:pine-nuts ;
+            rec:quantity 30.0 ;
+            rec:unit "g" ],
+        [ a rec:IngredientLine ;
+            rec:ingredient ingredient:parmesan-cheese ;
+            rec:quantity 40.0 ;
+            rec:unit "g" ],
+        [ a rec:IngredientLine ;
+            rec:ingredient ingredient:garlic ;
+            rec:quantity 1.0 ;
+            rec:unit "clove" ] ;
+    rec:name "Pesto Pasta"@en,
+        "Pâtes au pesto"@fr ;
+    rec:prepMinutes 15 ;
+    rec:recipeId "R04" ;
+    rec:servings 2 .
+
+recipe:potato-salad a rec:Recipe ;
+    rec:created "2025-08-04"^^xsd:date ;
+    rec:cuisine "German" ;
+    rec:description "Creamy potato salad with mayonnaise, mustard and celery."@en ;
+    rec:hasIngredient ingredient:celery,
+        ingredient:mayonnaise,
+        ingredient:mustard,
+        ingredient:onion,
+        ingredient:potato,
+        ingredient:salt ;
+    rec:hasIngredientLine [ a rec:IngredientLine ;
+            rec:ingredient ingredient:potato ;
+            rec:quantity 800.0 ;
+            rec:unit "g" ],
+        [ a rec:IngredientLine ;
+            rec:ingredient ingredient:salt ;
+            rec:quantity 1.0 ;
+            rec:unit "tsp" ],
+        [ a rec:IngredientLine ;
+            rec:ingredient ingredient:celery ;
+            rec:quantity 2.0 ;
+            rec:unit "stalk" ],
+        [ a rec:IngredientLine ;
+            rec:ingredient ingredient:mayonnaise ;
+            rec:quantity 150.0 ;
+            rec:unit "g" ],
+        [ a rec:IngredientLine ;
+            rec:ingredient ingredient:mustard ;
+            rec:quantity 15.0 ;
+            rec:unit "g" ],
+        [ a rec:IngredientLine ;
+            rec:ingredient ingredient:onion ;
+            rec:quantity 1.0 ;
+            rec:unit "piece" ] ;
+    rec:name "Potato Salad"@en,
+        "Salade de pommes de terre"@fr ;
+    rec:prepMinutes 30 ;
+    rec:recipeId "R11" ;
+    rec:servings 4 .
+
+recipe:spaghetti-carbonara a rec:Recipe ;
+    rec:created "2025-01-14"^^xsd:date ;
+    rec:cuisine "Italian" ;
+    rec:description "Italian pasta tossed with egg, parmesan and crispy pancetta."@en ;
+    rec:hasIngredient ingredient:egg,
+        ingredient:garlic,
+        ingredient:pancetta,
+        ingredient:parmesan-cheese,
+        ingredient:salt,
+        ingredient:spaghetti ;
+    rec:hasIngredientLine [ a rec:IngredientLine ;
+            rec:ingredient ingredient:parmesan-cheese ;
+            rec:quantity 50.0 ;
+            rec:unit "g" ],
+        [ a rec:IngredientLine ;
+            rec:ingredient ingredient:pancetta ;
+            rec:quantity 100.0 ;
+            rec:unit "g" ],
+        [ a rec:IngredientLine ;
+            rec:ingredient ingredient:egg ;
+            rec:quantity 2.0 ;
+            rec:unit "piece" ],
+        [ a rec:IngredientLine ;
+            rec:ingredient ingredient:spaghetti ;
+            rec:quantity 200.0 ;
+            rec:unit "g" ],
+        [ a rec:IngredientLine ;
+            rec:ingredient ingredient:garlic ;
+            rec:quantity 1.0 ;
+            rec:unit "clove" ],
+        [ a rec:IngredientLine ;
+            rec:ingredient ingredient:salt ;
+            rec:quantity 1.0 ;
+            rec:unit "pinch" ] ;
+    rec:name "Spaghetti Carbonara"@en,
+        "Spaghetti à la carbonara"@fr ;
+    rec:prepMinutes 20 ;
+    rec:recipeId "R01" ;
+    rec:servings 2 .
+
+recipe:thai-green-curry a rec:Recipe ;
+    rec:created "2025-07-15"^^xsd:date ;
+    rec:cuisine "Thai" ;
+    rec:description "Chicken simmered in coconut milk and green curry paste, served with rice."@en ;
+    rec:hasIngredient ingredient:basil,
+        ingredient:chicken-breast,
+        ingredient:coconut-milk,
+        ingredient:fish-sauce,
+        ingredient:green-curry-paste,
+        ingredient:lime,
+        ingredient:rice ;
+    rec:hasIngredientLine [ a rec:IngredientLine ;
+            rec:ingredient ingredient:green-curry-paste ;
+            rec:quantity 50.0 ;
+            rec:unit "g" ],
+        [ a rec:IngredientLine ;
+            rec:ingredient ingredient:fish-sauce ;
+            rec:quantity 30.0 ;
+            rec:unit "ml" ],
+        [ a rec:IngredientLine ;
+            rec:ingredient ingredient:basil ;
+            rec:quantity 10.0 ;
+            rec:unit "leaf" ],
+        [ a rec:IngredientLine ;
+            rec:ingredient ingredient:lime ;
+            rec:quantity 1.0 ;
+            rec:unit "piece" ],
+        [ a rec:IngredientLine ;
+            rec:ingredient ingredient:chicken-breast ;
+            rec:quantity 500.0 ;
+            rec:unit "g" ],
+        [ a rec:IngredientLine ;
+            rec:ingredient ingredient:rice ;
+            rec:quantity 300.0 ;
+            rec:unit "g" ],
+        [ a rec:IngredientLine ;
+            rec:ingredient ingredient:coconut-milk ;
+            rec:quantity 400.0 ;
+            rec:unit "ml" ] ;
+    rec:name "Thai Green Curry"@en,
+        "Curry vert thaï"@fr ;
+    rec:prepMinutes 35 ;
+    rec:recipeId "R10" ;
+    rec:servings 4 .
+
+recipe:vegetable-soup a rec:Recipe ;
+    rec:created "2025-09-12"^^xsd:date ;
+    rec:cuisine "French" ;
+    rec:description "Hearty soup of carrots, potatoes, celery and tomatoes."@en ;
+    rec:hasIngredient ingredient:carrot,
+        ingredient:celery,
+        ingredient:olive-oil,
+        ingredient:onion,
+        ingredient:potato,
+        ingredient:salt,
+        ingredient:tomato ;
+    rec:hasIngredientLine [ a rec:IngredientLine ;
+            rec:ingredient ingredient:tomato ;
+            rec:quantity 400.0 ;
+            rec:unit "g" ],
+        [ a rec:IngredientLine ;
+            rec:ingredient ingredient:potato ;
+            rec:quantity 300.0 ;
+            rec:unit "g" ],
+        [ a rec:IngredientLine ;
+            rec:ingredient ingredient:salt ;
+            rec:quantity 1.0 ;
+            rec:unit "tsp" ],
+        [ a rec:IngredientLine ;
+            rec:ingredient ingredient:celery ;
+            rec:quantity 2.0 ;
+            rec:unit "stalk" ],
+        [ a rec:IngredientLine ;
+            rec:ingredient ingredient:carrot ;
+            rec:quantity 200.0 ;
+            rec:unit "g" ],
+        [ a rec:IngredientLine ;
+            rec:ingredient ingredient:olive-oil ;
+            rec:quantity 30.0 ;
+            rec:unit "ml" ],
+        [ a rec:IngredientLine ;
+            rec:ingredient ingredient:onion ;
+            rec:quantity 1.0 ;
+            rec:unit "piece" ] ;
+    rec:name "Vegetable Soup"@en,
+        "Soupe de légumes"@fr ;
+    rec:prepMinutes 40 ;
+    rec:recipeId "R12" ;
+    rec:servings 4 .
+
+allergen:celery a rec:Allergen ;
+    rec:name "Celery" .
+
+allergen:lupin a rec:Allergen ;
+    rec:name "Lupin" .
+
+allergen:molluscs a rec:Allergen ;
+    rec:name "Molluscs" .
+
+allergen:peanuts a rec:Allergen ;
+    rec:name "Peanuts" .
+
+allergen:sesame a rec:Allergen ;
+    rec:name "Sesame" .
+
+allergen:sulphites a rec:Allergen ;
+    rec:name "Sulphites" .
+
+category:bread a rec:Category ;
+    rec:name "Bread & Crumbs" ;
+    skos:broader category:grains .
+
+category:eggs a rec:Category ;
+    rec:name "Eggs" ;
+    skos:broader category:protein .
+
+category:fish a rec:Category ;
+    rec:name "Fish" ;
+    skos:broader category:seafood .
+
+category:herbs a rec:Category ;
+    rec:name "Herbs & Spices" ;
+    skos:broader category:produce .
+
+category:pork a rec:Category ;
+    rec:name "Pork" ;
+    skos:broader category:meat .
+
+category:poultry a rec:Category ;
+    rec:name "Poultry" ;
+    skos:broader category:meat .
+
+category:rice a rec:Category ;
+    rec:name "Rice" ;
+    skos:broader category:grains .
+
+category:wine a rec:Category ;
+    rec:name "Wine" ;
+    skos:broader category:pantry .
+
+allergen:crustaceans a rec:Allergen ;
+    rec:name "Crustaceans" .
+
+allergen:eggs a rec:Allergen ;
+    rec:name "Eggs" .
+
+allergen:fish a rec:Allergen ;
+    rec:name "Fish" .
+
+allergen:mustard a rec:Allergen ;
+    rec:name "Mustard" .
+
+allergen:soybeans a rec:Allergen ;
+    rec:name "Soybeans" .
+
+allergen:tree-nuts a rec:Allergen ;
+    rec:name "Tree Nuts" .
+
+category:baking a rec:Category ;
+    rec:name "Sweeteners & Baking" ;
+    skos:broader category:pantry .
+
+category:cheese a rec:Category ;
+    rec:name "Cheese" ;
+    skos:broader category:dairy .
+
+category:flour a rec:Category ;
+    rec:name "Flour" ;
+    skos:broader category:grains .
+
+category:fruit a rec:Category ;
+    rec:name "Fruit" ;
+    skos:broader category:produce .
+
+category:meat a rec:Category ;
+    rec:name "Meat" ;
+    skos:broader category:protein .
+
+category:milk-cream a rec:Category ;
+    rec:name "Milk & Cream" ;
+    skos:broader category:dairy .
+
+category:oils a rec:Category ;
+    rec:name "Oils" ;
+    skos:broader category:pantry .
+
+category:pasta-noodles a rec:Category ;
+    rec:name "Pasta & Noodles" ;
+    skos:broader category:grains .
+
+category:plant-protein a rec:Category ;
+    rec:name "Plant Protein" ;
+    skos:broader category:protein .
+
+category:seafood a rec:Category ;
+    rec:name "Seafood" ;
+    skos:broader category:protein .
+
+category:shellfish a rec:Category ;
+    rec:name "Shellfish" ;
+    skos:broader category:seafood .
+
+ingredient:almonds a rec:Ingredient ;
+    rec:hasAllergen allergen:tree-nuts ;
+    rec:inCategory category:nuts-seeds ;
+    rec:ingredientId "I018" ;
+    rec:kcalPer100g 579.0 ;
+    rec:name "Almonds" ;
+    rec:proteinPer100g 21.0 .
+
+ingredient:bread-crumbs a rec:Ingredient ;
+    rec:hasAllergen allergen:gluten ;
+    rec:inCategory category:bread ;
+    rec:ingredientId "I034" ;
+    rec:kcalPer100g 395.0 ;
+    rec:name "Bread Crumbs" ;
+    rec:proteinPer100g 13.0 .
+
+ingredient:cocoa-powder a rec:Ingredient ;
+    rec:inCategory category:baking ;
+    rec:ingredientId "I035" ;
+    rec:kcalPer100g 228.0 ;
+    rec:name "Cocoa Powder" ;
+    rec:proteinPer100g 20.0 .
+
+ingredient:coconut-milk a rec:Ingredient ;
+    rec:inCategory category:pantry ;
+    rec:ingredientId "I036" ;
+    rec:kcalPer100g 230.0 ;
+    rec:name "Coconut Milk" ;
+    rec:proteinPer100g 2.3 .
+
+ingredient:green-curry-paste a rec:Ingredient ;
+    rec:hasAllergen allergen:crustaceans ;
+    rec:inCategory category:sauces ;
+    rec:ingredientId "I037" ;
+    rec:kcalPer100g 120.0 ;
+    rec:name "Green Curry Paste" ;
+    rec:proteinPer100g 2.0 .
+
+ingredient:heavy-cream a rec:Ingredient ;
+    rec:hasAllergen allergen:milk ;
+    rec:inCategory category:milk-cream ;
+    rec:ingredientId "I031" ;
+    rec:kcalPer100g 340.0 ;
+    rec:name "Heavy Cream" ;
+    rec:proteinPer100g 2.8 .
+
+ingredient:lemon a rec:Ingredient ;
+    rec:inCategory category:fruit ;
+    rec:ingredientId "I028" ;
+    rec:kcalPer100g 29.0 ;
+    rec:name "Lemon" ;
+    rec:proteinPer100g 1.1 .
+
+ingredient:lupin-flour a rec:Ingredient ;
+    rec:hasAllergen allergen:lupin ;
+    rec:inCategory category:flour ;
+    rec:ingredientId "I030" ;
+    rec:kcalPer100g 371.0 ;
+    rec:name "Lupin Flour" ;
+    rec:proteinPer100g 40.0 .
+
+ingredient:mayonnaise a rec:Ingredient ;
+    rec:hasAllergen allergen:eggs,
+        allergen:mustard ;
+    rec:inCategory category:sauces ;
+    rec:ingredientId "I029" ;
+    rec:kcalPer100g 680.0 ;
+    rec:name "Mayonnaise" ;
+    rec:proteinPer100g 1.0 .
+
+ingredient:milk a rec:Ingredient ;
+    rec:hasAllergen allergen:milk ;
+    rec:inCategory category:milk-cream ;
+    rec:ingredientId "I004" ;
+    rec:kcalPer100g 42.0 ;
+    rec:name "Milk" ;
+    rec:proteinPer100g 3.4 .
+
+ingredient:mozzarella a rec:Ingredient ;
+    rec:hasAllergen allergen:milk ;
+    rec:inCategory category:cheese ;
+    rec:ingredientId "I042" ;
+    rec:kcalPer100g 280.0 ;
+    rec:name "Mozzarella" ;
+    rec:proteinPer100g 28.0 .
+
+ingredient:mussels a rec:Ingredient ;
+    rec:hasAllergen allergen:molluscs ;
+    rec:inCategory category:shellfish ;
+    rec:ingredientId "I025" ;
+    rec:kcalPer100g 86.0 ;
+    rec:name "Mussels" ;
+    rec:proteinPer100g 12.0 .
+
+ingredient:mustard a rec:Ingredient ;
+    rec:hasAllergen allergen:mustard ;
+    rec:inCategory category:sauces ;
+    rec:ingredientId "I023" ;
+    rec:kcalPer100g 66.0 ;
+    rec:name "Mustard" ;
+    rec:proteinPer100g 4.4 .
+
+ingredient:pancetta a rec:Ingredient ;
+    rec:inCategory category:pork ;
+    rec:ingredientId "I041" ;
+    rec:kcalPer100g 458.0 ;
+    rec:name "Pancetta" ;
+    rec:proteinPer100g 15.0 .
+
+ingredient:peanuts a rec:Ingredient ;
+    rec:hasAllergen allergen:peanuts ;
+    rec:inCategory category:nuts-seeds ;
+    rec:ingredientId "I014" ;
+    rec:kcalPer100g 567.0 ;
+    rec:name "Peanuts" ;
+    rec:proteinPer100g 26.0 .
+
+ingredient:pine-nuts a rec:Ingredient ;
+    rec:hasAllergen allergen:tree-nuts ;
+    rec:inCategory category:nuts-seeds ;
+    rec:ingredientId "I022" ;
+    rec:kcalPer100g 673.0 ;
+    rec:name "Pine Nuts" ;
+    rec:proteinPer100g 14.0 .
+
+ingredient:rice-noodles a rec:Ingredient ;
+    rec:inCategory category:pasta-noodles ;
+    rec:ingredientId "I038" ;
+    rec:kcalPer100g 109.0 ;
+    rec:name "Rice Noodles" ;
+    rec:proteinPer100g 1.8 .
+
+ingredient:salmon a rec:Ingredient ;
+    rec:hasAllergen allergen:fish ;
+    rec:inCategory category:fish ;
+    rec:ingredientId "I017" ;
+    rec:kcalPer100g 208.0 ;
+    rec:name "Salmon" ;
+    rec:proteinPer100g 20.0 .
+
+ingredient:sesame-oil a rec:Ingredient ;
+    rec:hasAllergen allergen:sesame ;
+    rec:inCategory category:oils ;
+    rec:ingredientId "I019" ;
+    rec:kcalPer100g 884.0 ;
+    rec:name "Sesame Oil" ;
+    rec:proteinPer100g 0.0 .
+
+ingredient:shrimp a rec:Ingredient ;
+    rec:hasAllergen allergen:crustaceans ;
+    rec:inCategory category:shellfish ;
+    rec:ingredientId "I016" ;
+    rec:kcalPer100g 99.0 ;
+    rec:name "Shrimp" ;
+    rec:proteinPer100g 24.0 .
+
+ingredient:soy-sauce a rec:Ingredient ;
+    rec:hasAllergen allergen:gluten,
+        allergen:soybeans ;
+    rec:inCategory category:sauces ;
+    rec:ingredientId "I015" ;
+    rec:kcalPer100g 53.0 ;
+    rec:name "Soy Sauce" ;
+    rec:proteinPer100g 8.0 .
+
+ingredient:tofu a rec:Ingredient ;
+    rec:hasAllergen allergen:soybeans ;
+    rec:inCategory category:plant-protein ;
+    rec:ingredientId "I027" ;
+    rec:kcalPer100g 76.0 ;
+    rec:name "Tofu" ;
+    rec:proteinPer100g 8.0 .
+
+ingredient:white-wine a rec:Ingredient ;
+    rec:hasAllergen allergen:sulphites ;
+    rec:inCategory category:wine ;
+    rec:ingredientId "I026" ;
+    rec:kcalPer100g 82.0 ;
+    rec:name "White Wine" ;
+    rec:proteinPer100g 0.1 .
+
+category:dairy a rec:Category ;
+    rec:name "Dairy" ;
+    skos:broader category:food .
+
+category:nuts-seeds a rec:Category ;
+    rec:name "Nuts & Seeds" ;
+    skos:broader category:plant-protein .
+
+category:produce a rec:Category ;
+    rec:name "Produce" ;
+    skos:broader category:food .
+
+allergen:gluten a rec:Allergen ;
+    rec:name "Gluten" .
+
+category:grains a rec:Category ;
+    rec:name "Grains & Cereals" ;
+    skos:broader category:food .
+
+category:protein a rec:Category ;
+    rec:name "Protein" ;
+    skos:broader category:food .
+
+ingredient:carrot a rec:Ingredient ;
+    rec:inCategory category:vegetables ;
+    rec:ingredientId "I032" ;
+    rec:kcalPer100g 41.0 ;
+    rec:name "Carrot" ;
+    rec:proteinPer100g 0.9 .
+
+ingredient:celery a rec:Ingredient ;
+    rec:hasAllergen allergen:celery ;
+    rec:inCategory category:vegetables ;
+    rec:ingredientId "I024" ;
+    rec:kcalPer100g 16.0 ;
+    rec:name "Celery" ;
+    rec:proteinPer100g 0.7 .
+
+ingredient:fish-sauce a rec:Ingredient ;
+    rec:hasAllergen allergen:fish ;
+    rec:inCategory category:sauces ;
+    rec:ingredientId "I040" ;
+    rec:kcalPer100g 35.0 ;
+    rec:name "Fish Sauce" ;
+    rec:proteinPer100g 5.0 .
+
+ingredient:lime a rec:Ingredient ;
+    rec:inCategory category:fruit ;
+    rec:ingredientId "I039" ;
+    rec:kcalPer100g 30.0 ;
+    rec:name "Lime" ;
+    rec:proteinPer100g 0.7 .
+
+ingredient:parmesan-cheese a rec:Ingredient ;
+    rec:hasAllergen allergen:milk ;
+    rec:inCategory category:cheese ;
+    rec:ingredientId "I012" ;
+    rec:kcalPer100g 431.0 ;
+    rec:name "Parmesan Cheese" ;
+    rec:proteinPer100g 38.0 .
+
+ingredient:potato a rec:Ingredient ;
+    rec:inCategory category:vegetables ;
+    rec:ingredientId "I033" ;
+    rec:kcalPer100g 77.0 ;
+    rec:name "Potato" ;
+    rec:proteinPer100g 2.0 .
+
+ingredient:rice a rec:Ingredient ;
+    rec:inCategory category:rice ;
+    rec:ingredientId "I020" ;
+    rec:kcalPer100g 130.0 ;
+    rec:name "Rice" ;
+    rec:proteinPer100g 2.7 .
+
+ingredient:spaghetti a rec:Ingredient ;
+    rec:hasAllergen allergen:gluten ;
+    rec:inCategory category:pasta-noodles ;
+    rec:ingredientId "I011" ;
+    rec:kcalPer100g 371.0 ;
+    rec:name "Spaghetti" ;
+    rec:proteinPer100g 13.0 .
+
+ingredient:sugar a rec:Ingredient ;
+    rec:inCategory category:baking ;
+    rec:ingredientId "I005" ;
+    rec:kcalPer100g 387.0 ;
+    rec:name "Sugar" ;
+    rec:proteinPer100g 0.0 .
+
+ingredient:tomato a rec:Ingredient ;
+    rec:inCategory category:vegetables ;
+    rec:ingredientId "I010" ;
+    rec:kcalPer100g 18.0 ;
+    rec:name "Tomato" ;
+    rec:proteinPer100g 0.9 .
+
+allergen:milk a rec:Allergen ;
+    rec:name "Milk" .
+
+category:food a rec:Category ;
+    rec:name "Food" .
+
+category:sauces a rec:Category ;
+    rec:name "Sauces & Condiments" ;
+    skos:broader category:pantry .
+
+category:pantry a rec:Category ;
+    rec:name "Pantry" ;
+    skos:broader category:food .
+
+category:vegetables a rec:Category ;
+    rec:name "Vegetables" ;
+    skos:broader category:produce .
+
+ingredient:basil a rec:Ingredient ;
+    rec:inCategory category:herbs ;
+    rec:ingredientId "I021" ;
+    rec:kcalPer100g 23.0 ;
+    rec:name "Basil" ;
+    rec:proteinPer100g 3.2 .
+
+ingredient:butter a rec:Ingredient ;
+    rec:hasAllergen allergen:milk ;
+    rec:inCategory category:dairy ;
+    rec:ingredientId "I002" ;
+    rec:kcalPer100g 717.0 ;
+    rec:name "Butter" ;
+    rec:proteinPer100g 0.9 .
+
+ingredient:chicken-breast a rec:Ingredient ;
+    rec:inCategory category:poultry ;
+    rec:ingredientId "I013" ;
+    rec:kcalPer100g 165.0 ;
+    rec:name "Chicken Breast" ;
+    rec:proteinPer100g 31.0 .
+
+ingredient:onion a rec:Ingredient ;
+    rec:inCategory category:vegetables ;
+    rec:ingredientId "I009" ;
+    rec:kcalPer100g 40.0 ;
+    rec:name "Onion" ;
+    rec:proteinPer100g 1.1 .
+
+ingredient:wheat-flour a rec:Ingredient ;
+    rec:hasAllergen allergen:gluten ;
+    rec:inCategory category:flour ;
+    rec:ingredientId "I001" ;
+    rec:kcalPer100g 364.0 ;
+    rec:name "Wheat Flour" ;
+    rec:proteinPer100g 10.0 .
+
+ingredient:egg a rec:Ingredient ;
+    rec:hasAllergen allergen:eggs ;
+    rec:inCategory category:eggs ;
+    rec:ingredientId "I003" ;
+    rec:kcalPer100g 155.0 ;
+    rec:name "Egg" ;
+    rec:proteinPer100g 13.0 .
+
+ingredient:olive-oil a rec:Ingredient ;
+    rec:inCategory category:oils ;
+    rec:ingredientId "I007" ;
+    rec:kcalPer100g 884.0 ;
+    rec:name "Olive Oil" ;
+    rec:proteinPer100g 0.0 .
+
+ingredient:garlic a rec:Ingredient ;
+    rec:inCategory category:vegetables ;
+    rec:ingredientId "I008" ;
+    rec:kcalPer100g 149.0 ;
+    rec:name "Garlic" ;
+    rec:proteinPer100g 6.4 .
+
+ingredient:salt a rec:Ingredient ;
+    rec:inCategory category:pantry ;
+    rec:ingredientId "I006" ;
+    rec:kcalPer100g 0.0 ;
+    rec:name "Salt" ;
+    rec:proteinPer100g 0.0 .
+

@@ -6,13 +6,14 @@ Python scripts for learning Stardog Cloud: connecting, building a model, and run
 quick_start/                 Connect to Stardog, load a small people/companies dataset, run a query
   quick_start_tutorial.ipynb   step-by-step tutorial: loading, SPARQL, updates, transactions
   quick_start.py
-recipes/                     Recipe / ingredient / allergen model; allergens inferred by reasoning
-  create_model.py
-  data/*.csv
+  recipes/                     Recipe / ingredient / allergen model; allergens inferred by reasoning
+    create_model.py
+    data/*.csv
 supply_chain/                Logistics supply chain use case solved with Stardog's graph algorithms
   supply_chain_tutorial.ipynb  step-by-step tutorial: all 5 algorithms, charts, what-if analysis
   load_data.py, run_analytics.py, report.py
   data/*.csv
+stardog_tutorial/            Full tutorial, basic to expert (18 chapters, in progress)
 tools/                       Spark connector, Java 11, Hadoop winutils (used by supply_chain)
 stardog_training_material/   Training slides and exercises
 .env                         Stardog credentials (shared by all folders)
@@ -76,7 +77,7 @@ Run from this (root) folder with the venv's Python:
 
 ```
 .venv\Scripts\python quick_start\quick_start.py
-.venv\Scripts\python recipes\create_model.py
+.venv\Scripts\python quick_start\recipes\create_model.py
 ```
 
 ## Supply chain use case

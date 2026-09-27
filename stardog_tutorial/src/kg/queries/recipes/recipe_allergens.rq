@@ -1,0 +1,12 @@
+# Every recipe with each allergen it contains, and the ingredient responsible.
+# Parameters: none
+PREFIX rec:        <http://example.org/recipes#>
+
+SELECT ?recipe_name ?allergen ?because_of
+WHERE {
+  ?recipe a rec:Recipe ; rec:name ?recipe_name ; rec:hasIngredient ?i .
+  ?i rec:name ?because_of ; rec:hasAllergen ?a .
+  ?a rec:name ?allergen .
+  FILTER(lang(?recipe_name) = "en")
+}
+ORDER BY ?recipe_name ?allergen

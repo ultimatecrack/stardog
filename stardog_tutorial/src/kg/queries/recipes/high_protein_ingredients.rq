@@ -1,0 +1,12 @@
+# Ingredients with at least ?min_protein grams of protein per 100 g.
+# Parameters: ?min_protein (number)
+PREFIX rec:        <http://example.org/recipes#>
+
+SELECT ?ingredient ?protein ?kcal ?category
+WHERE {
+  ?i a rec:Ingredient ; rec:name ?ingredient ;
+     rec:proteinPer100g ?protein ; rec:kcalPer100g ?kcal ;
+     rec:inCategory/rec:name ?category .
+  FILTER(?protein >= ?min_protein)
+}
+ORDER BY DESC(?protein)

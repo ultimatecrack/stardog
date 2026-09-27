@@ -1,0 +1,11 @@
+# Recipes of one cuisine.
+# Parameters: ?cuisine (text, e.g. "Italian")
+PREFIX rec:        <http://example.org/recipes#>
+
+SELECT ?name ?minutes ?description
+WHERE {
+  ?recipe a rec:Recipe ; rec:cuisine ?cuisine ; rec:name ?name ; rec:prepMinutes ?minutes .
+  FILTER(lang(?name) = "en")
+  OPTIONAL { ?recipe rec:description ?description }
+}
+ORDER BY ?name

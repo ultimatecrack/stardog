@@ -1,0 +1,43 @@
+ingredient_id,name,category_id,kcal_per_100g,protein_g_per_100g
+I001,Wheat Flour,flour,364,10.0
+I002,Butter,dairy,717,0.9
+I003,Egg,eggs,155,13.0
+I004,Milk,milk-cream,42,3.4
+I005,Sugar,baking,387,0.0
+I006,Salt,pantry,0,0.0
+I007,Olive Oil,oils,884,0.0
+I008,Garlic,vegetables,149,6.4
+I009,Onion,vegetables,40,1.1
+I010,Tomato,vegetables,18,0.9
+I011,Spaghetti,pasta-noodles,371,13.0
+I012,Parmesan Cheese,cheese,431,38.0
+I013,Chicken Breast,poultry,165,31.0
+I014,Peanuts,nuts-seeds,567,26.0
+I015,Soy Sauce,sauces,53,8.0
+I016,Shrimp,shellfish,99,24.0
+I017,Salmon,fish,208,20.0
+I018,Almonds,nuts-seeds,579,21.0
+I019,Sesame Oil,oils,884,0.0
+I020,Rice,rice,130,2.7
+I021,Basil,herbs,23,3.2
+I022,Pine Nuts,nuts-seeds,673,14.0
+I023,Mustard,sauces,66,4.4
+I024,Celery,vegetables,16,0.7
+I025,Mussels,shellfish,86,12.0
+I026,White Wine,wine,82,0.1
+I027,Tofu,plant-protein,76,8.0
+I028,Lemon,fruit,29,1.1
+I029,Mayonnaise,sauces,680,1.0
+I030,Lupin Flour,flour,371,40.0
+I031,Heavy Cream,milk-cream,340,2.8
+I032,Carrot,vegetables,41,0.9
+I033,Potato,vegetables,77,2.0
+I034,Bread Crumbs,bread,395,13.0
+I035,Cocoa Powder,baking,228,20.0
+I036,Coconut Milk,pantry,230,2.3
+I037,Green Curry Paste,sauces,120,2.0
+I038,Rice Noodles,pasta-noodles,109,1.8
+I039,Lime,fruit,30,0.7
+I040,Fish Sauce,sauces,35,5.0
+I041,Pancetta,pork,458,15.0
+I042,Mozzarella,cheese,280,28.0

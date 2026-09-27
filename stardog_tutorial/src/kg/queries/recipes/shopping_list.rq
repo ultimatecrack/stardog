@@ -1,0 +1,11 @@
+# Ingredients with quantities for one recipe.
+# Parameters: ?recipe (IRI, e.g. recipe:pad-thai)
+PREFIX rec:        <http://example.org/recipes#>
+
+SELECT ?ingredient ?quantity ?unit
+WHERE {
+  ?recipe rec:hasIngredientLine ?line .
+  ?line rec:ingredient ?i ; rec:quantity ?quantity ; rec:unit ?unit .
+  ?i rec:name ?ingredient .
+}
+ORDER BY ?ingredient

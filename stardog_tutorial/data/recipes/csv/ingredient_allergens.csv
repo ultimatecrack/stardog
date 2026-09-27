@@ -1,0 +1,28 @@
+ingredient_id,allergen_name
+I001,Gluten
+I002,Milk
+I003,Eggs
+I004,Milk
+I011,Gluten
+I012,Milk
+I014,Peanuts
+I015,Soybeans
+I015,Gluten
+I016,Crustaceans
+I017,Fish
+I018,Tree Nuts
+I019,Sesame
+I022,Tree Nuts
+I023,Mustard
+I024,Celery
+I025,Molluscs
+I026,Sulphites
+I027,Soybeans
+I029,Eggs
+I029,Mustard
+I030,Lupin
+I031,Milk
+I034,Gluten
+I037,Crustaceans
+I040,Fish
+I042,Milk

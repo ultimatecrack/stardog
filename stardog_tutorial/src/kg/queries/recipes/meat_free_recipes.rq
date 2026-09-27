@@ -1,0 +1,16 @@
+# Recipes without meat, poultry, pork, fish or shellfish.
+# Parameters: none
+PREFIX rec:        <http://example.org/recipes#>
+PREFIX category:   <http://example.org/recipes/category/>
+
+SELECT ?name ?cuisine
+WHERE {
+  ?recipe a rec:Recipe ; rec:name ?name ; rec:cuisine ?cuisine .
+  FILTER(lang(?name) = "en")
+  FILTER NOT EXISTS {
+    ?recipe rec:hasIngredient/rec:inCategory ?c .
+    FILTER(?c IN (category:meat, category:poultry, category:pork,
+                  category:seafood, category:fish, category:shellfish))
+  }
+}
+ORDER BY ?name

@@ -1,0 +1,14 @@
+# All recipes with cuisine, prep time and servings, quickest first.
+# Parameters: none
+PREFIX rec:        <http://example.org/recipes#>
+
+SELECT ?recipe ?name ?cuisine ?minutes ?servings
+WHERE {
+  ?recipe a rec:Recipe ;
+          rec:name ?name ;
+          rec:cuisine ?cuisine ;
+          rec:prepMinutes ?minutes ;
+          rec:servings ?servings .
+  FILTER(lang(?name) = "en")
+}
+ORDER BY ?minutes ?name

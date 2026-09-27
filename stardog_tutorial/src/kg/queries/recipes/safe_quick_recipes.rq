@@ -1,0 +1,16 @@
+# Recipes ready in at most ?max_minutes that contain no ingredient with the given allergen.
+# Parameters: ?allergen_name (text, e.g. "Milk"), ?max_minutes (integer)
+PREFIX rec:        <http://example.org/recipes#>
+
+SELECT ?name ?cuisine ?minutes
+WHERE {
+  ?recipe a rec:Recipe ; rec:name ?name ; rec:cuisine ?cuisine ; rec:prepMinutes ?minutes .
+  FILTER(lang(?name) = "en")
+  FILTER(?minutes <= ?max_minutes)
+  FILTER NOT EXISTS {
+    ?recipe rec:hasIngredient ?i .
+    ?i rec:hasAllergen ?a .
+    ?a rec:name ?allergen_name .
+  }
+}
+ORDER BY ?minutes ?name
