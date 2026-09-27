@@ -1,0 +1,31 @@
+facility_id,name,type,city,country,region
+S1,Shenzhen Electronics Components,Supplier,Shenzhen,China,Asia
+S2,Shanghai Plastics Co,Supplier,Shanghai,China,Asia
+S3,Bangalore Chip Works,Supplier,Bangalore,India,Asia
+S4,Taipei Display Panels,Supplier,Taipei,Taiwan,Asia
+F1,Shenzhen Assembly Plant,Factory,Shenzhen,China,Asia
+F2,Pune Assembly Plant,Factory,Pune,India,Asia
+P1,Port of Shanghai,Port,Shanghai,China,Asia
+P2,Port of Singapore,Port,Singapore,Singapore,Asia
+P3,Port of Mumbai,Port,Mumbai,India,Asia
+P4,Port of Rotterdam,Port,Rotterdam,Netherlands,Europe
+P5,Port of Los Angeles,Port,Los Angeles,USA,North America
+DC1,Rotterdam Distribution Center,DistributionCenter,Rotterdam,Netherlands,Europe
+DC2,Frankfurt Distribution Center,DistributionCenter,Frankfurt,Germany,Europe
+DC3,Los Angeles Distribution Center,DistributionCenter,Los Angeles,USA,North America
+DC4,Chicago Distribution Center,DistributionCenter,Chicago,USA,North America
+DC5,Dallas Distribution Center,DistributionCenter,Dallas,USA,North America
+RC1,Memphis Returns Center,ReturnsCenter,Memphis,USA,North America
+R1,Berlin Store,RetailStore,Berlin,Germany,Europe
+R2,Paris Store,RetailStore,Paris,France,Europe
+R3,Amsterdam Store,RetailStore,Amsterdam,Netherlands,Europe
+R4,Los Angeles Store,RetailStore,Los Angeles,USA,North America
+R5,San Francisco Store,RetailStore,San Francisco,USA,North America
+R6,Chicago Store,RetailStore,Chicago,USA,North America
+R7,New York Store,RetailStore,New York,USA,North America
+R8,Houston Store,RetailStore,Houston,USA,North America
+S5,Minas Gerais Coffee Farm,Supplier,Belo Horizonte,Brazil,South America
+F3,Santos Coffee Roastery,Factory,Santos,Brazil,South America
+DC6,Sao Paulo Distribution Center,DistributionCenter,Sao Paulo,Brazil,South America
+R9,Rio de Janeiro Store,RetailStore,Rio de Janeiro,Brazil,South America
+R10,Buenos Aires Store,RetailStore,Buenos Aires,Argentina,South America

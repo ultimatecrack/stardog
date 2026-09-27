@@ -1,0 +1,187 @@
+prefix sh: <http://www.w3.org/ns/shacl#>
+prefix : <http://api.stardog.com/>
+prefix xsd: <http://www.w3.org/2001/XMLSchema#>
+
+clear all
+
+clear silent graph :myData 
+clear silent graph :myData1 
+insert data 
+{
+    graph :myData
+    {
+        :alice a :Person ; :Name "Alice is Wonderful" .
+        :bob a :Person ; :Name "Bob Styles" .
+
+        
+        :alice :passportNumber "IRL123255" .
+        :alice :nationality "Republic Of Ireland" .
+        
+        :bob :passportNumber "UK123255" .
+    }
+};
+
+insert data
+{
+    graph :myData1
+    {
+        :x123 a :Customer ; :ID 12345 .
+        :x124 a :Customer ; :ID 12347 .
+    }
+}
+
+select (str(:myData) as ?iri) {}
+
+select * { 
+    graph :myShapes {
+        ?x a sh:NodeShape ;
+        sh:targetClass ?class
+     }
+ }
+
+construct {
+?x a sh:NodeShape ;
+  sh:targetClass ?class ;
+  sh:property [
+    sh:path ?property ;
+    sh:datatype ?datatype ;
+    sh:minCount ?minCount
+  ] .
+}
+where 
+{
+    graph :myShapes {
+    ?x a sh:NodeShape ;
+    sh:targetClass ?class;
+    sh:property [
+    sh:path ?property ;
+    sh:datatype ?datatype ;
+    sh:minCount ?minCount ]
+    }
+}
+
+# run all shapes against all data
+validate all
+
+# validate only specific graphs
+validate graph :myData :myData1
+
+# validate a specific node
+validate :charlie
+
+# validate against a specific shapes graph
+validate all using shapes graph :myShapes1 
+
+# validate using a specific shape!
+validate all using shapes :myShape1 
+
+# validate against a shape specified inline
+validate all using shapes {
+    :NameShape a sh:NodeShape ;
+        sh:targetClass :Person ;
+        sh:property [
+         sh:path :Name ;
+         sh:datatype xsd:integer ;
+       ] .
+}
+
+# validate 
+validate graph stardog:context:named
+using shapes graph :myShapes1 
+
+# test whether aliases work
+insert data {
+    graph stardog:graph:aliases 
+    {
+        :allMyData stardog:graph:alias :myData, :myData1 .
+        :allMyShapes stardog:graph:alias :myShapes, :myShapes1 .
+    } 
+}
+
+# ALso works against graph aliases
+validate graph :allMyData
+using shapes graph :allMyShapes 
+
+
+PREFIX icv: <tag:stardog:api:icv:>
+SELECT * {
+    SERVICE icv:validate {
+      # service input parameters
+      [] icv:dataGraph :allMyData;
+         icv:shapesGraph :allMyShapes;
+      
+      # service output parameters
+         icv:resultSeverity ?severity ;
+         icv:resultMessage ?message ;
+         icv:sourceShape ?shape ;
+         icv:sourceConstraint ?constraint ;
+         icv:sourceConstraintComponent ?component ;
+         icv:focusNode ?focusNode ;
+         icv:resultPath ?path ;
+         icv:value ?valueNode ;
+    }
+}
+
+# The objects of triples with predicates 
+# sh:focusNode sh:resultPath sh:value
+# can pinpoint the offending triples
+
+SELECT ?focusNode ?path ?valueNode {
+    SERVICE icv:validate {
+      # service input parameters
+      [] icv:dataGraph :allMyData;
+         icv:shapesGraph :myShapes;
+      
+      # service output parameters
+         icv:focusNode ?focusNode ;
+         icv:resultPath ?path ;
+         icv:value ?valueNode ;
+    }
+}
+
+# sh:message specifies an alternative message
+# sh:Info specifies informal messages
+# sh:severity specifies severity as sh:Violation, sh:Warning or sh:Info
+
+validate all using shapes {
+    :NameShape a sh:NodeShape ;
+        sh:targetClass :Person ;
+        sh:property [
+         sh:path :Name ;
+         sh:datatype xsd:string ;
+         sh:message ":Name should be a string" ;
+         sh:severity sh:Info ;
+       ] .
+}
+
+validate all using shapes {
+    :PassportConditionShape a sh:NodeShape ;
+        sh:targetClass :Person ;
+        sh:sparql [
+            a sh:SPARQLConstraint ;
+            sh:message "If a person has a passport number, they must also have a nationality." ;
+            sh:select """
+            select $this ?myShape
+            where {
+                $this :passportNumber ?pass .
+                filter not exists { $this :nationality ?nat }
+            }
+            """ ;
+        sh:severity sh:Violation
+  ] .
+}
+
+validate all
+
+# So far validation has been on demand
+# We can set th DB properties to guard mode
+# This prevents adding data to the graph that would cause a violation
+insert data 
+{
+    graph :myData
+    {
+        :dave a :Person ; :Name 1.414 .
+    }
+}
+
+insert data { :joe rdf:value "Hello World"}

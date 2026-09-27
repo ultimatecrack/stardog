@@ -1,0 +1,53 @@
+@prefix Recipe_Basic: <urn:Recipe_Basic:> .
+@prefix : <http://api.stardog.com/> .
+@prefix stardog: <tag:stardog:api:> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix so: <https://schema.org/> .
+
+<http://example.org/quickstart#acme> a <http://example.org/quickstart#Company> ;
+   <http://example.org/quickstart#name> "Acme Corp" ;
+   <http://example.org/quickstart#city> "Bengaluru" .
+<http://example.org/quickstart#globex> a <http://example.org/quickstart#Company> ;
+   <http://example.org/quickstart#name> "Globex Ltd" ;
+   <http://example.org/quickstart#city> "Pune" .
+<http://example.org/quickstart#initech> a <http://example.org/quickstart#Company> ;
+   <http://example.org/quickstart#name> "Initech" ;
+   <http://example.org/quickstart#city> "Hyderabad" .
+<http://example.org/quickstart#alice> a <http://example.org/quickstart#Person> ;
+   <http://example.org/quickstart#name> "Alice" ;
+   <http://example.org/quickstart#age> 30 ;
+   <http://example.org/quickstart#worksFor> <http://example.org/quickstart#acme> ;
+   <http://example.org/quickstart#role> "Data Engineer" ;
+   <http://example.org/quickstart#knows> <http://example.org/quickstart#bob> , <http://example.org/quickstart#carol> .
+<http://example.org/quickstart#bob> a <http://example.org/quickstart#Person> ;
+   <http://example.org/quickstart#name> "Bob" ;
+   <http://example.org/quickstart#age> 35 ;
+   <http://example.org/quickstart#worksFor> <http://example.org/quickstart#acme> ;
+   <http://example.org/quickstart#role> "Director" ;
+   <http://example.org/quickstart#knows> <http://example.org/quickstart#dave> .
+<http://example.org/quickstart#carol> a <http://example.org/quickstart#Person> ;
+   <http://example.org/quickstart#name> "Carol" ;
+   <http://example.org/quickstart#age> 28 ;
+   <http://example.org/quickstart#worksFor> <http://example.org/quickstart#globex> ;
+   <http://example.org/quickstart#role> "Data Scientist" ;
+   <http://example.org/quickstart#knows> <http://example.org/quickstart#alice> .
+<http://example.org/quickstart#dave> a <http://example.org/quickstart#Person> ;
+   <http://example.org/quickstart#name> "Dave" ;
+   <http://example.org/quickstart#age> 42 ;
+   <http://example.org/quickstart#worksFor> <http://example.org/quickstart#initech> ;
+   <http://example.org/quickstart#role> "Architect" .
+<http://example.org/quickstart#eve> a <http://example.org/quickstart#Person> ;
+   <http://example.org/quickstart#name> "Eve" ;
+   <http://example.org/quickstart#age> 25 ;
+   <http://example.org/quickstart#worksFor> <http://example.org/quickstart#globex> ;
+   <http://example.org/quickstart#role> "Analyst" ;
+   <http://example.org/quickstart#knows> <http://example.org/quickstart#carol> , <http://example.org/quickstart#dave> .
+<http://example.org/quickstart#frank> a <http://example.org/quickstart#Person> ;
+   <http://example.org/quickstart#name> "Frank" ;
+   <http://example.org/quickstart#age> 31 ;
+   <http://example.org/quickstart#worksFor> <http://example.org/quickstart#initech> ;
+   <http://example.org/quickstart#role> "Data Engineer" ;
+   <http://example.org/quickstart#knows> <http://example.org/quickstart#dave> .

@@ -1,0 +1,1583 @@
+# SPARQL 101 - A Comprehensive Tutorial
+# Author: Joe Fagan (Stardog)
+# 
+# This tutorial covers the fundamentals of SPARQL (SPARQL Protocol and RDF Query Language)
+# through practical examples and hands-on exercises.
+#
+# Course Outline:
+# 1. Basic Triple Patterns - The foundation of SPARQL queries
+# 2. Basic Graph Patterns (BGP) - Combining multiple triple patterns
+# 3. FILTERs - Restricting results based on conditions
+# 4. OPTIONAL Patterns - Matching patterns when possible, returning results even without matches
+# 5. UNION Patterns - Combining results from multiple patterns
+# 6. Aggregations - GROUP BY, COUNT, SUM, and other aggregate functions
+# 7. Subqueries - Embedding SPARQL queries within other queries
+
+ 
+# =============================================================================
+# SETUP: Creating Sample Data
+# =============================================================================
+# Before we can query any data, we need some triples to work with.
+# Using the SPARQL Update Language, we can insert sample data.
+
+# prefix rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+# prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+# prefix : <http://api.stardog.com/> 
+PREFIX ex: <http://example.org/>
+
+
+# Show all triples in a table
+SELECT * { ?s ?p ?o }
+
+insert data {
+    :saturn a :planet .
+    :saturn rdfs:label "Saturn the planet" 
+}
+
+# Remove the triples we entered
+
+clear all
+
+# Confirm deletion
+SELECT * { ?s ?p ?o }
+
+# Insert the main dataset we will use for the bulk of the course.
+# This dataset represents a customer relationship management system with various companies
+# and their relationships (who sells to whom).
+INSERT DATA { 
+    :x123 a ex:Customer .
+    :x123 rdfs:label "Smith and Co" .
+    :x123 rdf:description "This is a great customer" .
+    :x123 ex:tel "405-123-1124" .
+    :x123 ex:employees 1000 .
+    :x123 ex:sellsTo :x125 .
+    :x123 ex:sellsTo :x126 .
+
+    :x124 a ex:Customer .
+    :x124 rdfs:label "Johnson Enterprises" .
+    :x124 ex:tel "303-121-1125" .
+    :x124 ex:employees 950 .
+    :x124 ex:sellsTo :x126 .
+
+    :x125 a ex:Customer .
+    :x125 rdfs:label "Miller Industries" .
+    :x125 ex:tel "303-123-1126" .
+    :x125 ex:employees 500 .
+    :x125 ex:sellsTo :x123 .
+
+    :x126 a ex:Customer .
+    :x126 rdfs:label "Apex Inc" .
+    :x126 ex:tel "315-123-1127" .
+    :x126 ex:sellsTo :x127 .
+    :x126 ex:employees 500 .
+
+    :x127 a ex:Customer .
+    :x127 rdfs:label "Garcia Ltd." .
+    :x127 ex:tel "405-123-1128" .
+
+    :x128 a ex:Customer .
+    :x128 rdfs:label "Rodriguez Solutions" .
+    :x128 ex:tel "405-123-1129" .
+    :x128 ex:employees 350 .
+
+    :x129 a ex:Customer .
+    :x129 rdfs:label "Taylor Manufacturing" .
+    :x129 ex:tel "315-123-1130" .
+
+    :x130 a ex:Customer .
+    :x130 rdfs:label "Anderson Tech" .
+
+    :x131 a ex:Customer .
+    :x131 rdfs:label "Thomas Services" .
+    :x131 ex:tel "405-123-1132" .
+
+    :x132 a ex:Customer .
+    :x132 rdfs:label "Hernandez Tech" .
+    :x132 ex:tel "405-123-1133" .
+
+    :x133 a ex:Customer .
+    :x133 ex:Name "Haulover Tech" .
+    :x133 rdf:description "Old account" .   
+    :x133 ex:tel "252-123-1134" .
+    
+} 
+
+# =============================================================================
+# OPTIONAL: Creating a Schema Model (for Stardog Explorer visualization)
+# =============================================================================
+# Creating a model is not necessary for the SPARQL tutorial - we don't use model triples
+# However, it is necessary if you wish to visualize the data in Stardog Explorer.
+# We're placing the model triples in a special named graph: stardog:context:schema
+
+# NOTE: If you wish to use a named graph other than stardog:context:schema:
+# Suppose you want to put the model in the named graph :myModel
+# To view the model in Explorer:
+# 1. Change the database properties to tell Explorer where the model resides
+# 2. Call your model 'basic'
+# 3. In Database -> Sparql101 -> Properties, search for 'reasoning schema' 
+#    and enter (without quotes): "basic=http://api.stardog.com/myModel"
+# 4. Save the changes
+# 5. In Explorer -> Settings, SELECT 'basic' from the model dropdown
+
+# Optionally create a model (only necessary if you wish to use Explorer)
+INSERT DATA {
+    # graph :myModel {
+    GRAPH stardog:context:schema {
+        ex:Customer a owl:Class .
+        ex:Customer rdfs:label "customer" ;
+            <tag:stardog:designer:colorId> "sd-qb-light-blue-1" .
+
+        ex:tel a owl:DatatypeProperty ;
+            rdfs:label "hasTelephone" ;
+            so:domainIncludes ex:Customer ;
+            so:rangeIncludes xsd:string .
+
+        ex:employees a owl:DatatypeProperty ;
+            rdfs:label "employee_count" ;
+            so:domainIncludes ex:Customer ;
+            so:rangeIncludes xsd:integer .
+        
+        ex:Name a owl:DatatypeProperty ;
+            rdfs:label "Name" ;
+            so:domainIncludes ex:Customer ;
+            so:rangeIncludes xsd:string .
+
+        ex:sellsTo a owl:ObjectProperty ;
+            rdfs:label "sellsTo" ;
+            so:domainIncludes ex:Customer ;
+            so:rangeIncludes ex:Customer .
+    }
+}   
+
+# =============================================================================
+# SPARQL TUTORIAL BEGINS
+# =============================================================================
+
+# =============================================================================
+# 1. BASIC TRIPLE PATTERNS
+# =============================================================================
+# Triple patterns are the foundation of SPARQL queries. They match RDF triples
+# in the graph using variables (starting with ? or $) to represent unknown values.
+
+# Return all triples in the graph
+# Note: If we created a model, triples from the model are not included because 
+# they're stored in a named graph (stardog:context:schema)
+SELECT ?s ?p ?o 
+WHERE {  # WHERE keyword is optional but recommended for clarity
+    ?s ?p ?o 
+} 
+ORDER BY DESC(?s) ?p DESC(?o)  # Optional: specifies sorting order
+LIMIT 10                       # Optional: limits number of results
+
+# List all triples sorted by descending column o and ascending column s
+# The * means show every variable that appears in the pattern
+SELECT * { ?s ?p ?o }
+ORDER BY DESC(?o) ?s
+
+# Variable naming rules:
+# - Variables must begin with ? or $ (?abc is equivalent to $abc)
+# - Variables are case sensitive (?xy is different from ?Xy)
+# - Variables can contain: letters (a-z, A-Z), numbers (0-9), underscore (_), 
+#   and many accented characters (Õ, Ç, etc.)
+# - Valid examples: ?name_1st ?x_age $totalCount ?ÕÊÇ
+# - Invalid examples: ?name-first ?x.age ?sum/num
+# - Tip: The only allowed punctuation mark in a variable name is underscore _
+
+# Example: Fix the Subject and Predicate, find triples that match that pattern
+# and return results in the variable ?xyz
+SELECT ?xyz { :x123 ex:sellsTo ?xyz } 
+ORDER BY ?xyz
+
+# What predicate links the IRI :x123 to the telephone number?
+SELECT ?p { :x123 ?p "405-123-1124" }
+
+# What is the IRI of the customer with the given name?
+SELECT * { ?customer rdfs:label "Thomas Services" }
+
+# Two variable examples:
+# Find the subject and predicate of every triple that ends with ex:Customer
+SELECT * { ?s ?p ex:Customer }
+
+# Find the predicate and object of all triples that begin with :x123
+SELECT * { :x123 ?p ?o }
+
+# You can reorder and rename any column with SELECT (?old_varName AS ?new_Name)
+# Here we're renaming ?s from the query to ?IRI in the results
+SELECT ?name ?s { ?s rdfs:label ?name }
+
+SELECT ?name (?s AS ?IRI) { ?s rdfs:label ?name }
+
+# Rename multiple columns and change order
+# This example demonstrates how to rename and reorder columns
+SELECT (?bar AS ?Object) (?foo AS ?Subject) (?boo AS ?Predicate) 
+{ ?foo ?boo ?bar } 
+
+# New variables can be used to rename columns or introduce new values:
+# - New variables do not need to depend on the data in the graph
+# - We can assign values to variables in the SELECT clause
+# - Notice we still need a WHERE clause ({}), even if the pattern is empty
+# - New variables can also be re-used later in expressions
+# This gives us a powerful way to manipulate results
+
+# New variables do not need to depend on data
+select (1+1 AS ?two) {}     # The graph pattern is empty
+
+select (1+1 AS ?two) (?two * 3 AS ?six) {}   # We can reuse variables created earlier
+
+# =============================================================================
+# 2. BASIC GRAPH PATTERNS (BGP)
+# =============================================================================
+# Basic Graph Patterns are combinations of triple patterns that get matched simultaneously.
+# All triple patterns in a BGP must be satisfied for a result to be returned.
+
+# Find the telephone number for "Smith and Co"
+# This is the rux of how we can query an RDF graph wthout seeing IRIs
+select ?telephone
+{ 
+    ?s rdfs:label "Smith and Co" . 
+    ?s ex:tel ?telephone .
+}
+
+# Order doesn't matter in BGP - this query produces the same results:
+select * { 
+    ?s rdfs:label "Smith and Co" . 
+    ?s ex:tel ?telephone .
+}
+
+# All triples must be matched simultaneously!
+# This returns no results because no customer with label "Smith and Co" 
+# who has a telephone number is also a :Bear
+select ?telephone { 
+    ?s ex:tel ?telephone .
+    ?s rdfs:label "Smith and Co" . 
+    ?s a :bear .        # Comment out this line to see results
+}
+
+# Find the name and telephone of companies with 500 employees
+select ?sLabel ?telephone { 
+    ?s a ex:Customer .
+    ?s ex:tel ?telephone .
+    ?s rdfs:label ?sLabel .
+    ?s ex:employees 500 .
+}
+
+
+select * { 
+    # ?s a ex:Customer .
+    # ?s ex:tel ?telephone .
+    # ?s rdfs:label ?sLabel .
+    ?s ex:employees 500 .
+    # ?s rdf:description ?desc .
+} ORDER BY ?s
+
+# Who sells to whom?
+# This returns only the IRIs of the customers
+
+select * { ?x ex:sellsTo ?y }
+
+# Same query again, but also retrieve the labels of the IRIs.
+# Also make sure we're asking about customers.
+# This is good practice in large databases - be very specific about what you're asking
+select *
+{ 
+    ?x a ex:Customer .      # Confirm these IRIs are actually customers
+    ?y a ex:Customer .
+    ?x ex:sellsTo ?y .      # Find the IRIs
+    ?x rdfs:label ?xLabel . # Retrieve the labels
+    ?y rdfs:label ?yLabel .
+}
+
+# =============================================================================
+# Avoiding Unintended Cartesian Products
+# =============================================================================
+# Make sure the triples in a pattern are connected by variables.
+# Unconnected patterns can create unintended Cartesian products.
+
+# This deliberately creates the cross product of the list of customers
+# There are n*n results (every customer paired with every other customer)
+select * 
+{ 
+    ?cust1 a ex:Customer . # Binds every customer to ?cust1
+    ?cust2 a ex:Customer . # Binds every customer to ?cust2
+    # Uncomment to get a set of ordered pairs
+    # FILTER(str(?cust1) <= str(?cust2))
+}
+
+# Since any combination of ?cust1 and ?cust2 legitimately matches both triple patterns,
+# we get the cross product
+
+# Typos can inadvertently produce Cartesian products
+select *
+{ 
+    ?s0 a ex:Customer .
+    ?s0 ex:employees 950 .
+    ?sO ex:tel ?telephone . # Fix the ?sO variable name (should be ?s0)
+    ?s0 rdfs:label ?sLabel .
+}
+
+
+# When debugging, a common approach is to comment out lines in the BGP
+# But this can produce cross products if the commented line kept the BGP connected
+# When commented out, the triples are no longer connected and you get the cross product
+select * { 
+    ?x rdfs:label ?xLabel .
+    ?y rdfs:label ?yLabel .
+    ?x ex:sellsTo ?y . # Explore commenting out this line
+} order by (-?xLabel)
+
+select *
+{
+    values ?x { 1 2 3 4 5 }
+    values ?y { "apple" "bear" "cat" "dog" "elephant"}
+} order by (-?y)
+
+# =============================================================================
+# Mathematical Functions and Operators
+# =============================================================================
+# SPARQL provides a full suite of mathematical operators and functions.
+# Note: The SPARQL spec includes the usual operators +, -, /, *
+# and functions: ceil(), floor(), abs(), round(), and rand()
+# Most SPARQL implementations also provide pi(), trigonometric and logarithmic functions, and more.
+
+select 
+    (pi() AS ?pi) 
+    (pow(?pi, 4) AS ?pi4) 
+    (sqrt(sqrt(?pi4)) AS ?pi1) 
+    (round(?pi * 10000) / 10000 AS ?pi_rounded)
+    (ceil(?pi) AS ?ceil)
+    (floor(?pi) AS ?floor)
+    (sin(2*pi()) AS ?sin_pi)
+    (rnd() as ?rnd)
+{}
+
+# =============================================================================
+# String Functions
+# =============================================================================
+# SPARQL has a rich collection of string functions that behave intuitively 
+# according to their function names.
+# In addition, there are date functions, hash functions, language functions, and IRI functions.
+
+select 
+    ("Hello World" AS ?myString)
+    (lcase(?myString) AS ?lcase)
+    (ucase(?myString) AS ?ucase)
+    (strstarts(?myString, "Hell") AS ?strstarts)
+    (strends(?myString, "Hello") AS ?strends)
+    (contains(?myString, "o Wor") AS ?contains)
+    (strbefore(?myString, "World") AS ?strbefore)
+    (strafter(?myString, lcase("L")) AS ?strafter)
+{}
+
+# Case-insensitive search for "smith"
+select * {
+    ?cust a ex:Customer ;
+          rdfs:label ?name .  
+    FILTER ( contains(ucase(?name), "SMITH") )
+}
+
+# Here we use "smith" as the search string
+# By using lcase() we're converting each customer name to lowercase
+# The contains() function checks whether "smith" is contained in the lowercase name
+# This achieves a case-insensitive search
+
+# We can assign values to variables in the SELECT projection.
+# Example: ("Hello World" AS ?myString) {}
+# But this new variable ?myString is not available in the WHERE clause.
+# To assign values inside the WHERE clause, we can use the BIND() function - which we'll look at next.
+
+# =============================================================================
+# The BIND Function
+# =============================================================================
+# BIND allows you to bind values to variables within the WHERE clause.
+# This is useful for creating computed values or making queries more readable.
+
+# Bind "sparql" to the variable ?result
+select ?result
+{ BIND("sparql" AS ?result) }
+
+# Use BIND to manually bind values to variables used in the triple pattern
+# This allows you to project those bindings in the SELECT clause
+# Show number of executive employees - calculating that 10% of employees are executives
+select ?class ?predicate ?employees ?executive_employees
+{
+    BIND (ex:Customer AS ?class)
+    ?s a ?class .
+    BIND (ex:employees AS ?predicate)
+    ?s ?predicate ?employees .
+    BIND ( ?employees * 0.10 AS ?executive_employees)
+}
+
+# The next 2 queries give the same result
+# The first does the work in the WHERE clause (i.e., between the {})
+select ?s ?pred ?l
+{   
+    BIND (rdfs:label AS ?pred)
+    ?s ?pred ?l 
+}
+
+select ?s ?pred ?l
+{   
+    ?s rdfs:label ?l 
+}
+
+
+# This query does the work in the projection (i.e., in the SELECT portion)
+select ?s ("rdfs:label" AS ?pred) ?l
+{ ?s rdfs:label ?l }
+
+# As general guidance, it is preferable to do the work in the WHERE clause,
+# but in such a simple example, it doesn't matter where.
+
+# Use string functions to grab the first three digits of phone as area code.
+# Use bind to assign the area code to a variable ?areaCode
+# Do the work in the WHERE clause
+select ?lab ?tel ?areaCode
+{
+    ?x a ex:Customer .
+    ?x ex:tel ?tel .
+    ?x rdfs:label ?lab .
+    bind(integer(SUBSTR(?tel, 1, 3)) AS ?areaCode)
+}
+
+# Gives the same results but does the work in the projection
+select ?lab ?tel (SUBSTR(?tel, 1, 3) AS ?areaCode)
+{
+    ?x a ex:Customer .
+    ?x ex:tel ?tel .
+    ?x rdfs:label ?lab .
+}
+
+# =============================================================================
+# The VALUES Clause
+# =============================================================================
+# The VALUES clause is a powerful way to load data into variables.
+# It's particularly useful for creating lookup tables or filtering on specific values.
+
+# Get the IRIs of 3 specific companies
+select ?co_name ?co_iri 
+{
+    VALUES ?co_name {
+        "Smith and Co"
+        "Johnson Enterprises"
+        "Miller Industries" 
+    }
+    ?co_iri rdfs:label ?co_name  
+}
+
+# What's happening above:
+# The VALUES clause creates a partial results table with one column (?co_name) and three rows
+# The triple pattern creates another partial results table with 2 columns (?co_iri and ?co_name) and 10 rows
+# These partial results are joined on the common column (?co_name)
+
+# VALUES clause supports both single and multiple variable bindings
+select *
+{
+    VALUES (?city ?latitude ?longitude) { 
+        ("Paris" "48.8566° N" "2.3522° E")
+        ("Tokyo" "35.6762° N" "139.6503° E")
+        ("Rio de Janeiro" "-22.9068° S" "-43.1729° W")
+    }
+}
+
+# VALUES is a really useful way of creating a partial result set without querying the graph
+# Using VALUEE we can explore the how BIND operates on each mapping individually, once per row.
+
+select *
+{
+    values ?x { 1 2 3 }
+    values ?y { 4 5 }
+    bind ( ?x as ?z)
+}
+
+select (count(distinct(?r)) as ?bindCnt)
+# select *
+{
+    bind ( rnd() as ?r )
+    values ?x { 1 2 3 }
+    values ?y { "a" "b"}
+}
+
+# 
+select ?i
+{
+    values ?t { 0 1 2 3 4 5 6 7 8 9 }
+    values ?u { 0 1 2 3 4 5 6 7 8 9 }
+    bind (10 * ?t + ?u + 1 as ?i)
+} order by (?i)
+
+# =============================================================================
+# The IF Function
+# =============================================================================
+# The IF function enables conditional logic in SPARQL queries.
+# Syntax: IF(condition, trueValue, falseValue)
+
+# Simple IF example
+select (2 AS ?x) (IF(?x = 1, "x is one", "x is not 1") AS ?val) {}
+
+# Find the maximum value between two numbers
+select ?row_max
+{
+    VALUES (?x ?y) { (1 3) (4 2) (3 7)}
+    bind( IF(?x > ?y, ?x, ?y) AS ?row_max)
+}
+
+# 
+
+
+# Explanation:
+# - If 1 > 3 returns false, so y=3 is chosen and bound to ?row_max
+# - If 4 > 2 returns true, so 4 is bound to ?row_max
+# - If 3 > 7 returns false, so 7 is bound to ?row_max
+# 
+# IF(condition, trueValue, falseValue):
+# - condition: The expression to evaluate (must return a boolean value)
+# - trueValue: The value to return if the condition is true
+# - falseValue: The value to return if the condition is false
+
+# The values clause can be used as a simple lookup table
+# Here we're grabbing the area code from the telephone number and using that to find the location
+# (Notice bind must come before values)
+select ?tel ?area_code ?location
+{
+    ?x a ex:Customer . 
+    ?x ex:tel ?tel .
+    bind(strbefore(?tel, "-") AS ?area_code)
+    values (?area_code ?location) 
+    { 
+        ( "405" "Oklahoma City") 
+        ( "303" "Denver metropolitan area") 
+        ( "315" "Northern New York") 
+        ( "252" "Northeastern North Carolina")
+    }
+}
+
+# Another IF example: Categorize customers based on the number of employees
+select ?name ?type
+{
+    ?x a ex:Customer ; 
+        rdfs:label ?name ; 
+        ex:employees ?emp .
+    bind( IF(?emp > 500, "Large employer", "Small employer") AS ?type )
+} order by ?type
+
+# You can use values clause after ANY SELECT statement to grab a subset of the results
+select ?name ?type
+{
+    ?x a ex:Customer ; 
+        rdfs:label ?name ; 
+        ex:employees ?emp .
+    bind( IF(?emp > 500, "Large employer", "Small employer") AS ?type )
+} order by ?type
+values ?type { "Large employer" }
+
+# combining VALUES, RAND() and cross products for a dice game
+select ?throw
+{
+    values ?dice1 { 1 2 3 4 5 6 }
+    values ?dice2 { 1 2 3 4 5 6 }
+    bind(?dice1 + ?dice2 as ?throw)
+    # bind(rand() as ?rnd)
+} 
+order by rnd() # we can use the rnd() function right here.
+# order by ?rnd
+limit 1
+
+# checks which customers are “key accounts” based on whether their name appears in a supplied list.
+# clssify them
+select ?cust ?label ?keyAccount ?category
+where {
+  ?cust a ex:Customer ;
+        rdfs:label ?label ;
+        ex:employees ?employees .
+
+  # define a few key accounts
+  values ?vipName { "Smith and Co" "Apex Inc" "Johnson Enterprises" }
+
+  # test if the label is one of the VIP names
+  bind(if(?label in (?vipName), true, false) as ?keyAccount)
+
+  # classify them by size
+  bind(
+    if(?employees > 800, "large",
+      if(?employees > 400, "medium", "small")
+    ) as ?category
+  )
+}
+order by ?cust
+
+
+
+# =============================================================================
+# 3. FILTERS
+# =============================================================================
+# FILTERs restrict values returned based on conditions.
+# Supported operators:
+# - Arithmetic: *, /, +, -
+# - Comparison: =, !=, <, >, <=, >=
+# - Logical: ! (NOT), && (AND), || (OR)
+# Only rows whose variables satisfy the FILTER condition are included.
+
+# Find companies with between 500 and 1000 employees
+select ?xLabel ?emp {  
+    ?x a ex:Customer ;
+        ex:employees ?emp ;
+        rdfs:label ?xLabel .
+    # FILTER ( ?emp >= 400 )
+    # FILTER ( ?emp <= 800 )
+    FILTER ( !(?emp >= 400 && ?emp <= 800) )
+}
+
+# ! means NOT in the filter
+# In this example, this will filter out (remove) rather than filter in (include) 
+select ?xLabel ?emp {  
+    ?x a ex:Customer ;
+        ex:employees ?emp ;
+        rdfs:label ?xLabel .
+    # FILTER ( ! (?emp >= 400 && ?emp <= 800) )
+    # FILTER( (!(?emp >= 400)) || (!(?emp <= 800)) ) # equivalent 
+    FILTER ( ?emp < 400 || ?emp > 800 ) #equivalent 
+}
+
+# || means OR, && means AND
+# Find companies starting with 'Sm' or ending with 'Tech'
+select * { 
+    ?x a ex:Customer .
+    ?x rdfs:label ?name .
+    FILTER (strStarts(lcase(?name), "sm") || strEnds(?name, "Tech"))
+}
+
+# =============================================================================
+# 4. OPTIONAL Patterns
+# =============================================================================
+# OPTIONAL patterns match if possible, but return results even if there's no match.
+# This is useful for left-outer-join-like behavior.
+
+# Example: Give me the IRIs of all customers, and their labels if they have a label
+select * { 
+    ?x a ex:Customer .
+    OPTIONAL { ?x rdfs:label ?label . } 
+    OPTIONAL { ?x rdf:description ?desc }
+} 
+
+# If instead we use this query, customers without labels would be omitted
+select * { 
+    ?x a ex:Customer ; rdfs:label ?name .
+}
+
+# Create a table of all customer data, including blanks for missing information
+select * { 
+    ?x a ex:Customer .
+    OPTIONAL { ?x rdfs:label ?label }
+    OPTIONAL { ?x rdf:description ?desc  }
+    OPTIONAL { ?x ex:Name ?name }
+    OPTIONAL { ?x ex:employees ?emps }
+    OPTIONAL { ?x ex:sellsTo ?y }
+    OPTIONAL { ?x ex:tel ?tel }
+} order by ?x ?name
+
+
+# Use of filter in OPTIONAL
+# 
+select *
+{
+    ?x a ex:Customer 
+    optional { ?x rdfs:label ?label }
+    optional { ?x ex:Name ?name }
+    # filter( ! bound(?label) )
+    # filter ( !bound(?name) )
+    bind( coalesce( ?name , ?label , "unknow") as ?NAME )
+}
+
+
+
+# The evaluation of a WHERE clause proceesses OPTIONALS sequentially from top to bottom, 
+# Any variables bound by earlier patterns become part of the current solution set and become visible to all subsequent patterns at filter time. 
+# Each OPTIONAL is effectively a left outer join that extends the existing bindings with new variables when matches are found
+# Consequently values from the current solution set are available for FILTER inside OPTIONAL block
+select * { 
+    ?x a ex:Customer .
+    OPTIONAL { ?x rdfs:label ?label }
+    # filter(contains(?label, "Miller"))
+    # OPTIONAL { ?x rdfs:label ?label filter(contains(?label, "Miller"))}
+    # OPTIONAL { ?x ex:tel ?tel filter(contains(?label, "Miller")) }
+    # OPTIONAL { ?x ex:tel ?tel bind((contains(?label, "Miller")) as ?lM) }
+    # OPTIONAL { ?x ex:Name ?name }
+} order by ?x
+
+
+select * { 
+
+    ?x a ex:Customer .
+    OPTIONAL { ?x rdfs:label ?label . 
+            filter (?x = :124 )
+    }
+    OPTIONAL { ?x rdf:description ?desc 
+            }
+    OPTIONAL { ?x ex:employees ?emps 
+    }
+    OPTIONAL { ?x ex:sellsTo ?y 
+                }
+    OPTIONAL { ?x ex:tel ?tel . 
+               filter (strStarts(?tel, "405"))
+                }
+               
+} order by ?x ?name
+
+
+# Of course, the following query would include only those customers that had ALL 
+# of the attributes and relationships
+select * { 
+    ?x a ex:Customer .
+    ?x rdfs:label ?name .
+    ?x rdf:description ?desc .
+    ?x ex:employees ?emps .
+    ?x ex:sellsTo ?y .
+    ?x ex:tel ?tel .
+} order by ?x ?name
+
+select *
+{
+    ?x a ex:Customer 
+    optional { ?x rdfs:label ?label }
+    optional { ?x ex:Name ?name }
+    # filter( ! bound(?label) )
+    # filter ( !bound(?name) )
+    bind( coalesce( ?name , ?label , "unknow") as ?NAME )
+}
+
+
+
+
+# =============================================================================
+# 5. UNION Patterns
+# =============================================================================
+# UNION returns results that match any of the given patterns.
+# UNION is often used when data is stored in different formats, to combine results from multiple 
+# patterns, regardless of how it is represented in the dataset.
+
+select *
+{  
+    { ?x a ex:Customer ; rdfs:label ?string }
+    UNION
+    { ?x a ex:Customer ; ex:Name ?string }
+}
+
+# UNION has performance trade-offs
+# Limit the dataset by placing common patterns outside the UNIONs
+# Example: Optimize the query above by moving the common ?x a ex:Customer outside the union
+select *
+{  
+    ?x a ex:Customer .
+    { ?x rdfs:label ?name }
+    UNION
+    { ?x ex:Name ?name }
+} 
+# This optimization reduced the number of scans from 4 to 3
+
+# Of course we could have used values instead of UNION
+select ?x ?name
+{  
+    ?x a ex:Customer .
+    values ?pred { rdfs:label ex:Name }
+    ?x ?pred ?name
+} 
+
+# Or we could have used filters instead of UNION 
+select ?x ?name
+{  
+    ?x a ex:Customer .
+    ?x ?pred ?name
+    filter( ?pred = rdfs:label || ?pred = ex:Name )
+}
+
+# Here we saw 4 ways of writing the same query that in a very large dataset would have different performance
+# Which query is fastest is difficult to predict
+# It's not unusual that queries will be rewritten to optimize performance (or enhance readability)
+
+# UNION can be used to combine data from multiple queries
+# that may or may not share variables
+select *
+{
+    { ?x a ex:Customer ; ex:tel ?tel }
+    UNION
+    { ?x rdfs:label ?name ; ex:employees ?emp }
+} 
+order by ?tel
+
+
+# =============================================================================
+# DISTINCT and REDUCED
+# =============================================================================
+# What predicates do I have in my database, but list each one only once
+
+select DISTINCT ?pred 
+# SELECT ?pred  # This would show duplicates
+{
+    ?x ?pred ?y
+}
+
+# Find all sellers
+select ?seller { ?seller ex:sellsTo ?buyer }
+
+# Find all DISTINCT sellers (REDUCED is similar to DISTINCT but may be more efficient)
+select REDUCED ?seller { ?seller ex:sellsTo ?buyer }
+
+# =============================================================================
+# NOT EXISTS and MINUS
+# =============================================================================
+# NOT EXISTS and MINUS are used to exclude results based on the absence of certain patterns.
+
+# Find customers without a label
+select * { 
+    ?x a ex:Customer .
+    filter NOT EXISTS { ?x rdfs:label ?y }
+}
+# This is a very common data quality query.
+# In well-behaved databases, all IRIs in the customer class should have labels!
+
+# Similarly using MINUS...
+select * { 
+    ?x a ex:Customer .
+    MINUS { ?x rdfs:label ?xLabel }
+} 
+
+# Find customers that are missing either a label or ex:employees
+# Tip: Use filter EXISTS first to indicate what will be removed
+# Using filter EXISTS to confirm we identify customers with both a label and employee count
+# (Of course we can do that without filter EXISTS)
+
+select * { 
+    ?x a ex:Customer ; rdfs:label ?name 
+    filter EXISTS { ?x rdfs:label ?y ; ex:employees ?num_employees }
+} order by ?x
+
+# Now we can remove those customers who have both a label and an ex:employees,
+# leaving only those who are missing either label or ex:employees (or both)
+select * { 
+    ?x a ex:Customer ; rdfs:label ?name 
+    filter NOT EXISTS { ?x rdfs:label ?y ; ex:employees ?num_employees }
+} order by ?x
+
+# And MINUS gives the same results
+select * { 
+    ?x a ex:Customer ; rdfs:label ?name 
+    MINUS { ?x rdfs:label ?y ; ex:employees ?num_employees }
+} order by ?x
+
+# Exclude customers who sell to each other
+select ?name { 
+    ?x a ex:Customer ; rdfs:label ?name .
+    MINUS { ?x ex:sellsTo ?y . ?y ex:sellsTo ?x }
+} order by ?x
+
+
+# =============================================================================
+# Blank Nodes (Anonymous Nodes)
+# =============================================================================
+# We will show how to use blank or anonymous node syntax.
+# Often we're binding values to variables that we just don't care about.
+
+select DISTINCT *
+{ [] ?pred [] }
+
+# We can use anonymous node syntax to make the query more readable
+select DISTINCT ?pred
+{ [] ?pred [] }
+
+# We can even reuse the anonymous node by giving it a name beginning with _:
+# Find customers who mutually sell to each other
+select *
+{
+    ?seller ex:sellsTo _:buyer .    # _:var means I don't want to see the value of the variable var
+    _:buyer ex:sellsTo ?seller .
+    ?seller rdfs:label ?mutual_customers
+}
+
+# We can use anonymous nodes when the IRI just isn't important (or we can't think of a good IRI to use)
+# Really valuable for grouping chunks of items together
+# DELETE { ?s rdfs:label ?p . ?s ex:location ?x . ?s a ex:Areacode_Lookup }
+INSERT DATA
+{
+    [] rdfs:label "myPi" ; rdf:value "3.141" . 
+    [] rdfs:label "myg" ; rdf:value "9.81" .
+    [] rdf:value "405" ; ex:location "Oklahoma City" ; a ex:Areacode_Lookup .
+    [] rdf:value "303" ; ex:location "Denver metropolitan area" ; a ex:Areacode_Lookup .
+    [] rdf:value "315" ; ex:location "Northern New York" ; a ex:Areacode_Lookup .
+    [] rdf:value "252" ; ex:location "Northeastern North Carolina" ; a ex:Areacode_Lookup .
+}
+# We can't use the IRI directly (we don't know it) but we can use its label to find its value.
+
+select * 
+{
+    {
+        _:x rdfs:label "myPi" .
+        _:x rdf:value ?val .
+    }  
+}
+
+select * 
+{
+    {
+        [] rdfs:label "myPi" ; 
+        rdf:value ?val .
+    }  
+}
+
+# Query the area code location 
+select *
+{
+    _:x a ex:Areacode_Lookup .
+    _:x ex:location ?location .
+    _:x rdf:value ?area_code .
+}
+
+# Alternative notation
+select *
+{
+    [ a ex:Areacode_Lookup ;
+     rdf:value ?area_code ;
+      ex:location ?location ]
+}
+
+select *
+{
+    _:x a ex:Areacode_Lookup ;
+    rdf:value ?area_code ;
+    ex:location ?location 
+}
+
+# Or even more concise
+select * { [] rdf:value ?area_code ; ex:location ?location ; a ex:Areacode_Lookup } 
+
+# Cool syntax
+select * { [ rdf:value ?area_code ; ex:location ?location ; a ex:Areacode_Lookup ] }
+
+# Remove the data we just entered
+# We will look at SPARQL Update language later - don't worry about the delete query
+# Use SELECT first to find the triples we inserted
+select ?x ?p ?o  
+where
+{ 
+    { ?x a ex:Areacode_Lookup . ?x ?p ?o . }
+    UNION
+    { ?x rdf:value ?y . ?x ?p ?o }
+}
+
+# Then change the SELECT to DELETE
+DELETE { ?x ?p ?o } 
+where
+{ 
+    { ?x a ex:Areacode_Lookup . ?x ?p ?o . }
+    UNION
+    { ?x rdf:value ?y . ?x ?p ?o }
+}
+
+# =============================================================================
+# 6. Aggregations (GROUP BY, COUNT, SUM, etc.)
+# =============================================================================
+# Group results and perform aggregations on numeric and non-numeric data.
+
+# Count all customers
+select (COUNT(?x) AS ?cnt)
+{
+    ?x a ex:Customer .
+}
+
+# If the column contains numbers, there are many ways to aggregate
+select
+    (COUNT(*) AS ?Count)
+    (MAX(?emps) AS ?Max) 
+    (MIN(?emps) AS ?Min) 
+    (SUM(?emps) AS ?Sum)
+    (AVG(?emps) AS ?Avg)
+    (?Sum/?Count AS ?MyAvg)
+{
+    ?x a ex:Customer . 
+    ?x ex:employees ?emps .
+}
+
+# Numeric aggregates will not aggregate if there are any unbound variables anywhere in any column.
+# Example: If we use optional, some rows have ?emp unbound and so SUM() returns no value
+# We can get around the issue by setting unbound values to 0
+
+select 
+    (SUM(?emps) AS ?sum_with_UNDEFs)
+    (SUM(IF(BOUND(?emps), ?emps, 0)) AS ?Sum) 
+# SELECT *
+{
+    ?x a ex:Customer .
+    optional { ?x ex:employees ?emps }
+}
+
+# We can set the UNDEFs to 0 inside the where clause
+# But we need to use a new variable
+# As always, the position of bind matters
+select (SUM(?emps1) AS ?Sum) (AVG(?emps1) AS ?Avg)
+{
+    ?x a ex:Customer .
+    optional { 
+        ?x ex:employees ?emps .
+    }
+    bind(IF(BOUND(?emps), ?emps, 0) AS ?emps1) 
+}
+
+# When the column contains non-numeric values (e.g., strings), you can only count them 
+# or concatenate them together
+select (GROUP_CONCAT(?name ; separator = ", ") AS ?csv_string) (COUNT(*) AS ?cnt)
+{ ?x a ex:Customer ; rdfs:label ?name }
+
+# Up to now we've used the whole column to aggregate on
+# But we can divide the column into groups based on another column's value
+
+# First get area code and employee count
+select ?areaCode ?emps
+{
+    ?cust a ex:Customer ; ex:tel ?phone ; rdfs:label ?name .
+    bind(SUBSTR(?phone, 1, 3) AS ?areaCode)
+    ?cust ex:employees ?emps
+} order by ?areaCode
+
+# Now group by area code
+select ?areaCode (COUNT(?cust) AS ?count) (AVG(?emps) AS ?avg)
+{
+    ?cust a ex:Customer ; ex:tel ?phone .
+    bind(SUBSTR(?phone, 1, 3) AS ?areaCode)
+    ?cust ex:employees ?emps
+} GROUP BY ?areaCode
+
+# Prepare to group results by number of employees
+select *
+{
+    ?x a ex:Customer ; rdfs:label ?name .
+    ?x ex:employees ?numEmployees .
+}
+
+# Group by number of employees
+select ?numEmployees (COUNT(?x) AS ?num)
+{
+    ?x a ex:Customer ; ex:employees ?numEmployees
+}
+GROUP BY ?numEmployees
+
+# How many predicates does each customer have?
+select ?s (COUNT(?p) AS ?cnt)
+{
+    ?s a ex:Customer . 
+    ?s ?p ?o 
+}
+GROUP BY ?s
+
+# In how many triples does each predicate appear?
+select ?p (COUNT(*) AS ?cnt)
+{ ?s a ex:Customer . ?s ?p ?o . } 
+GROUP BY ?p
+HAVING ( ?cnt > 9 )
+order by DESC(?cnt)
+
+
+# =============================================================================
+# 7. Subqueries
+# =============================================================================
+# SPARQL queries embedded within other queries.
+# Used either for clarity or when you must go back to the graph a second time 
+# with values from the first pass.
+
+# Example: Which customers employ more than the average?
+# First you need the average.
+
+# The inner query to find the average:
+select (AVG(?num) AS ?avg)
+{ ?x ex:employees ?num }
+
+# Now use it in a subquery:
+select *
+{  
+    {
+        select (AVG(?num) AS ?avg)
+        { ?x ex:employees ?num }
+    }
+    ?cust ex:employees ?num1
+    filter (?num1 > ?avg)
+}
+
+# =============================================================================
+# Property Paths
+# =============================================================================
+# Property paths provide a concise way to express complex graph traversals.
+
+# Syntax and what it matches:
+# ^p        Inverse path (object to subject)
+# p1 / p2   Sequence path: p1 followed by p2
+# p1 | p2   Alternative path: p1 or p2 
+# p+        One or more matches of p
+# p*        Zero or more matches of p
+# p?        Zero or one matches of p
+# (p)       Use () to control precedence
+# !p        Not using predicate p
+
+# Path sequence: Find mutual ex:sellsTo (customers who sell to each other)
+select * { ?x ex:sellsTo / ex:sellsTo ?x } 
+
+# This is shorthand for:
+select * { ?x ex:sellsTo _:cust . _:cust ex:sellsTo ?x }
+
+# A common use of a sequence path is when you find an IRI but really want only its label
+select ?bLabel 
+{ :x123 ex:sellsTo / rdfs:label ?bLabel }
+
+# Find mutual sellers (customers who sell to each other)
+select * { ?x ex:sellsTo/ex:sellsTo ?x }
+
+# Alternative Path
+select ?x ?name {
+    ?x a ex:Customer .
+    ?x ( rdfs:label | ex:Name ) ?name .
+}
+
+# Equivalent query using UNION:
+select ?x ?name {
+    ?x a ex:Customer .
+    { ?x rdfs:label ?name } UNION { ?x ex:Name ?name }
+}
+
+# One or more matches - gives you a recursive search
+select *
+{ ?seller ex:sellsTo+ ?buyer . }
+
+select ?lseller ?lbuyer 
+{ 
+    ?seller ex:sellsTo+ ?buyer . 
+    ?seller rdfs:label ?lseller . 
+    ?buyer rdfs:label ?lbuyer 
+}
+
+# Example: In a Royals Database to list all the descendants
+select * 
+{ 
+    ?queen rdfs:label "Queen Elizabeth" .
+    ?queen :hasChild+ ?descendant .
+}
+
+# Or friends of friends...
+INSERT DATA { 
+    :a :hasFriend :b, :c, :d .
+    :b :hasFriend :d, :e .
+    :c :hasFriend :a, :b, :e .
+    :d :hasFriend :f 
+}
+
+# Friends of friends (who are not direct friends)
+# Any number of hops
+select *
+{
+    ?p1 :hasFriend+ ?p2
+    MINUS { ?p1 :hasFriend ?p2}
+}
+
+# Strictly 2 hops
+select DISTINCT ?p1 ?p2
+{
+    ?p1 :hasFriend/:hasFriend ?p2
+    filter (?p1 != ?p2)
+} order by ?p1 ?p2
+
+# Reverse path
+select * { 
+    "Miller Industries" ^rdfs:label ?xiri . # Shows ^ in action
+    "Johnson Enterprises" ^rdfs:label ?yiri .
+    ?xiri (ex:sellsTo | ^ex:sellsTo)+ ?yiri
+}
+
+# Find all possible buyer nodes on paths from sellers to buyers in reverse
+# Use the less exact REDUCED to partially remove duplicates
+select REDUCED ?buyer 
+{ ?buyer ^ex:sellsTo+ ?seller }
+
+select * { 
+    "Miller Industries" ^rdfs:label ?xiri . 
+    "Johnson Enterprises" ^rdfs:label ?yiri .
+    ?xiri (ex:sellsTo | ^ex:sellsTo)+ ?yiri
+}
+
+# Negation: Return all subject and objects of all triples except those with the given predicates
+select * 
+{ ?s !( ex:tel | a | ex:employees) ?o }
+
+# =============================================================================
+# DESCRIBE Query Form
+# =============================================================================
+# DESCRIBE returns a graph containing all triples where the specified resource appears.
+# Show all triples where :x123 is the subject
+# The output is a graph
+DESCRIBE :x123
+
+# Describe all triples beginning with IRIs identified by a graph pattern
+DESCRIBE ?x { ?x a ex:Customer ; ex:Name [] }
+
+# =============================================================================
+# CONSTRUCT Query Form
+# =============================================================================
+# CONSTRUCT creates a new RDF graph based on a template and where pattern.
+
+CONSTRUCT {} # This is the template
+where { ?s ?p ?o } # This is the where pattern
+
+CONSTRUCT {}{ ?x ex:sellsTo ?y }
+
+# The template part can be omitted (called shorthand CONSTRUCT) if
+# the new graph is to have triples identical to the pattern
+# The template is implicit
+CONSTRUCT {} { ?s ?p ?o } 
+CONSTRUCT where { ?s ?p ?o } 
+CONSTRUCT where { ?x a ex:Customer; rdfs:label ?name ; ex:tel ?tel }
+
+# Note: With shorthand CONSTRUCT, the where can have only basic graph patterns
+# because otherwise the implicit template can be ambiguous
+# (i.e., no optional or filter)
+
+# The template allows you to modify the triples so they can be different from the data
+# Create RDF list of customer names using ex:Name instead of rdfs:label
+CONSTRUCT 
+{ 
+    ?cust a ex:Customer .
+    ?cust ex:Name ?name .
+    ?cust ex:Telephone_Number ?tel .
+} 
+where 
+{ 
+    ?cust a ex:Customer . 
+    ?cust rdfs:label ?name .
+    ?cust ex:tel ?tel .
+}
+
+# The above query omitted customers with missing labels.
+# If a customer does not have a label, rather than omitting the customer, assign it "no label"
+# Here we use an explicit template and so the where clause can have more than a BGP
+
+CONSTRUCT {
+    ?cust a ex:Customer .
+    ?cust rdfs:label ?label .
+}
+where
+{
+    ?cust a ex:Customer .
+    optional { ?cust rdfs:label ?label_1 }
+    bind(IF(BOUND(?label_1), ?label_1, "no label") AS ?label)
+}
+
+# Note: The where keyword can be omitted, but it's a good habit to use where
+# Later, in the SPARQL Update Language section, we'll see that we can use the CONSTRUCT query 
+# first to verify that the changes we intend to make with INSERT are as expected.
+# And INSERT requires the where keyword
+# We could change the CONSTRUCT above to INSERT and write the triples back to the graph
+
+# =============================================================================
+# ASK Query Form
+# =============================================================================
+# ASK returns a boolean value (true/false) indicating whether the query pattern matches.
+
+# Does "Smith and Co" have a telephone number?
+ASK 
+{ 
+    ?cust a ex:Customer .
+    ?cust rdfs:label "Smith and Co" .
+    ?cust ex:tel ?tel .
+}
+
+select * { ?pluto a :planet }
+
+# ASK is used mostly in conditional logic within an application or script.
+# ASK determines whether a query pattern matches. It returns a boolean value (true or false) if any matches are found.
+# Often used just to check data has been loaded or modified as expected. 
+
+# Did the data load? Does the graph have any data?
+ASK { ?s ?p ?o }
+
+# Of course we could use SELECT, but ASK mitigates the need to use SELECT 
+# followed by checking whether the result set is empty. 
+# ASK can be highly performant. It stops once a single match of the pattern is found
+
+
+# This works
+CONSTRUCT { ?cust a ex:Customer .}
+where {
+    ?cust a ex:Customer .
+    filter NOT EXISTS { ?cust rdfs:label ?label }
+}
+
+# =============================================================================
+# Named Graphs
+# =============================================================================
+# An extension to RDF allows triples to be grouped and referred to by a name (IRI). 
+# These groupings are called Named Graphs.
+
+# Named graphs are useful for many purposes:
+# - Being able to separate off a set of triples or 'tie a bow' around them, for any reason
+# - Useful when making edits. Make a copy of the triples you're working on, make and check your edits
+# - Data Provenance: Track the origin of data
+# - Contextualization: Manage different contexts and versions, without merging
+# - Access Control: Apply security and privacy controls to specific subsets of data
+# - Query Optimization: Improve performance of SPARQL queries by allowing operations on specific named subsets of data
+
+# Clear all
+# Create a named graph
+INSERT DATA { 
+    GRAPH :myGraph 
+    { :myString rdf:value "Hello World" . } 
+}
+
+select * { GRAPH ?g { ?s ?p ?o }}
+
+INSERT DATA { :foo :boo "bar" }
+select * { ?s ?p ?o }
+
+# Read from a named graph
+# Using Quad notation - we're using the fourth element to specify the graph
+select * { 
+    { GRAPH :myGraph 
+        { ?s ?p ?o } 
+    } 
+    UNION 
+    { ?s ?p ?o }
+}
+
+# Alternative syntax using FROM clause
+select *
+FROM :myGraph
+{ ?s ?p ?o }
+
+CLEAR SILENT GRAPH :myGraph
+
+INSERT DATA {
+    GRAPH ex:Sales_2023 {
+        :c01 :buys :p01, :p02 .
+        :c03 :buys :p03 .
+    }
+    GRAPH ex:Sales_2024 {
+        :c01 :buys :p01, :p03 .
+        :c02 :buys :p02, :p04 .
+        :c03 :buys :p04 .
+    }
+}
+
+# Find all triples in either graphs (i.e., concatenate)
+select *
+{
+    { GRAPH ex:Sales_2023 { ?s ?p ?o } }
+    UNION
+    { GRAPH ex:Sales_2024 { ?s ?p ?o } }
+}
+
+select * { GRAPH ?g { ?s ?p ?o }}
+
+# Find sales in 2023 that were not repeated in 2024
+select *
+{
+    { GRAPH ex:Sales_2023 { ?s ?p ?o } }
+    MINUS
+    { GRAPH ex:Sales_2024 { ?s ?p ?o } }
+}
+
+# Select triples that appear in both graphs
+select *
+{
+    GRAPH ex:Sales_2023 { ?s ?p ?o }
+    GRAPH ex:Sales_2024 { ?s ?p ?o }
+}
+
+# Select customers who purchased in both years
+select DISTINCT ?cust
+{
+    GRAPH ex:Sales_2023 { ?cust :buys [] }
+    GRAPH ex:Sales_2024 { ?cust :buys [] }
+}
+
+# Select products that were bought in both years
+select *
+{
+    GRAPH ex:Sales_2023 { [] :buys ?prod }
+    GRAPH ex:Sales_2024 { [] :buys ?prod }
+}
+
+# Using a variable for the GRAPH name
+# This will identify all named graphs
+select DISTINCT ?g
+{
+    GRAPH ?g {}
+}
+
+INSERT DATA { :foo :boo "I live in the unnamed graph"}
+
+# Find all triples in named graphs
+select ?g (COUNT(*) AS ?cnt)
+{ GRAPH ?g { ?s ?p ?o } } 
+GROUP BY ?g
+
+# Notice the unnamed graph is not included.
+
+# To include unnamed graph, we must use UNION
+select * { 
+    { GRAPH ?g { ?s ?p ?o } } 
+    UNION
+    { ?s ?p ?o }
+}
+
+# Notice GRAPH ?g looks at one graph at a time
+# Example:
+
+INSERT DATA 
+{ 
+    GRAPH :people 
+    { :jack :livesIn :Paris }
+    GRAPH :places
+    { :Paris :inCountry :France }
+}  
+
+# Since each graph must match both triples in the pattern, no matches are found.
+select *
+{ 
+    GRAPH ?g
+    {
+        ?person :livesIn ?city .
+        ?city :inCountry ?country .
+    }
+}
+
+# In the next section we will see DATASET NOTATION that allows more flexibility in querying multiple graphs.
+select *
+FROM :people
+FROM :places
+{
+    ?person :livesIn ?city .
+    ?city :inCountry ?country .
+}
+
+# Or specify the graph explicitly
+select *
+{
+    GRAPH :people { ?person :livesIn ?city . }
+    GRAPH :places { ?city :inCountry ?country . }
+}
+
+# =============================================================================
+# Dataset Notation
+# =============================================================================
+# For this section we will use the following data
+
+CLEAR ALL
+INSERT DATA {
+    :Alice rdf:description "Alice inserted in the original unnamed graph" .
+    GRAPH :g1 { :Bob rdf:description "Bob inserted into named graph :g1" }
+    GRAPH :g2 { :Charlie rdf:description "Charlie inserted into named graph :g2" }
+}
+
+# Before named graphs were introduced, there was only a single graph per database. 
+# This graph served as the context for all queries and updates. It did not need a name. 
+# When named graphs were introduced, for more flexible data management, SPARQL provided a 
+# mechanism to scope queries to specific named graphs. 
+# We can change the 'default graph' to be, for example, the named graphs :g1 and :g2 using FROM
+
+select * { GRAPH ?g {} }
+
+select * 
+FROM :g1 
+FROM :g2
+FROM NAMED :g1
+{ ?s ?p ?o }
+
+select * 
+FROM :g1 
+FROM :g2 
+FROM NAMED :g1
+FROM NAMED :g2
+where { GRAPH ?g { :Bob ?p ?o } }
+
+# Here the triples from both graphs :g1 and :g2 are combined and treated as if they were part of a single graph, 
+# effectively creating a temporary union of the specified graphs. This combined graph acts as the default graph for the query, 
+# meaning that we do not need (and cannot use) the GRAPH keyword to access data from :g1 and :g2 explicitly within this query.
+# Notice Alice is not included!!!
+
+# Find the graph that has Bob
+select *
+FROM :g1
+FROM :g2
+FROM NAMED :g1
+FROM NAMED :g2
+{
+    { GRAPH :g1 { :Bob ?p ?o } bind ("hello" AS ?here) }
+    UNION
+    { :Bob ?p ?o }
+}
+
+select *
+FROM NAMED :g1
+FROM NAMED :g2
+{
+    { GRAPH :g1 { ?s ?p ?o } }
+    UNION
+    { GRAPH :g2 { ?s ?p ?o } }
+}
+
+# Having the original graph that has Alice in the context
+# Ways to access all three
+select * 
+{
+    { ?s ?p ?o }
+    UNION
+    {
+        GRAPH ?g { ?s ?p ?o }
+    }
+}
+
+# Or
+select *
+FROM <tag:stardog:api:context:default>
+FROM :g1
+FROM :g2
+{
+    ?s ?p ?o
+}
+
+select * { ?s ?p ?o }
+
+# But <tag:stardog:api:context:default> is the Stardog way to add the Alice graph to the context
+# There is no standard way in the SPARQL spec
+
+# =============================================================================
+# SPARQL Update Language
+# =============================================================================
+# SPARQL Update provides operations to modify RDF graphs.
+
+CLEAR ALL;
+INSERT DATA { 
+    :jack ex:hasAge 29 .
+    :jill ex:hasAge 50 .
+}
+
+select * { ?s ?p ?o }
+
+INSERT {
+    ?s ex:hasAge 30 .
+}
+where {
+    ?s ex:hasAge ?age .
+    filter( ?age > 30 )
+}
+
+select * { ?s ?p ?o }
+
+# Notice we only added the triple
+# To update it, we need to delete the old triple and write the new
+
+DELETE
+{
+    ?s ex:hasAge ?age
+}
+INSERT {
+    ?s ex:hasAge 30 .
+}
+where {
+    ?s ex:hasAge ?age .
+    filter( ?age > 30 )
+}
+

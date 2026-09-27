@@ -1,0 +1,20 @@
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+
+:myShape a sh:NodeShape ;
+  sh:targetClass :Person ;
+  sh:property :myNameSHape .
+  
+  :myNameSHape 
+    sh:path :Name ;
+    sh:datatype xsd:string ;
+    sh:minCount 1 
+  .
+
+:myShape1 a sh:NodeShape ;
+  sh:targetClass :Customer ;
+  sh:property [
+    sh:path :ID ;
+    sh:datatype xsd:integer ;
+    sh:minCount 1 ;
+    sh:maxCount 1
+  ] .
