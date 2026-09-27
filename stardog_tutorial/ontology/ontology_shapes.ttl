@@ -1,0 +1,29 @@
+# Governance rules for ontologies (Chapter 18): SHACL shapes that check the ontology itself.
+# Run them in CI on every ontology change, next to the data shapes.
+
+@prefix sh:   <http://www.w3.org/ns/shacl#> .
+@prefix owl:  <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix gov:  <http://example.org/governance#> .
+
+gov:OntologyHeaderShape a sh:NodeShape ;
+    rdfs:label "Ontology header" ;
+    sh:targetClass owl:Ontology ;
+    sh:property [ sh:path owl:versionInfo ; sh:minCount 1 ; sh:maxCount 1 ; sh:pattern "^[0-9]+[.][0-9]+$" ;
+                  sh:message "The ontology needs one version number like 1.1." ] ;
+    sh:property [ sh:path owl:versionIRI ; sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:IRI ;
+                  sh:message "The ontology needs one version IRI." ] .
+
+gov:TermShape a sh:NodeShape ;
+    rdfs:label "Class or property" ;
+    sh:targetClass owl:Class , owl:ObjectProperty , owl:DatatypeProperty ;
+    sh:property [ sh:path rdfs:label ; sh:minCount 1 ;
+                  sh:message "Every class and property needs a label." ] ;
+    sh:property [ sh:path rdfs:comment ; sh:minCount 1 ; sh:severity sh:Warning ;
+                  sh:message "Every class and property should be documented (rdfs:comment)." ] .
+
+gov:ObjectPropertyShape a sh:NodeShape ;
+    rdfs:label "Relationship" ;
+    sh:targetClass owl:ObjectProperty ;
+    sh:property [ sh:path rdfs:range ; sh:minCount 1 ;
+                  sh:message "A relationship needs a range: what kind of thing it points to." ] .

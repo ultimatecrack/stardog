@@ -1,0 +1,38 @@
+# EduGraph curriculum (Chapters 10+): topics, their prerequisites, and courses.
+@prefix edu:    <http://example.org/edu#> .
+@prefix topic:  <http://example.org/edu/topic/> .
+@prefix course: <http://example.org/edu/course/> .
+@prefix xsd:    <http://www.w3.org/2001/XMLSchema#> .
+
+# Topics: level 1 = beginner, 3 = advanced. edu:requires = direct prerequisite.
+topic:python-basics      a edu:Topic ; edu:name "Python basics" ;        edu:subject "Programming" ;      edu:level 1 .
+topic:control-flow       a edu:Topic ; edu:name "Control flow" ;         edu:subject "Programming" ;      edu:level 1 ; edu:requires topic:python-basics .
+topic:functions          a edu:Topic ; edu:name "Functions" ;            edu:subject "Programming" ;      edu:level 1 ; edu:requires topic:control-flow .
+topic:data-structures    a edu:Topic ; edu:name "Data structures" ;      edu:subject "Programming" ;      edu:level 2 ; edu:requires topic:functions .
+topic:numpy              a edu:Topic ; edu:name "NumPy" ;                edu:subject "Programming" ;      edu:level 2 ; edu:requires topic:data-structures , topic:linear-algebra .
+topic:pandas             a edu:Topic ; edu:name "pandas" ;               edu:subject "Programming" ;      edu:level 2 ; edu:requires topic:numpy .
+topic:visualization      a edu:Topic ; edu:name "Data visualization" ;   edu:subject "Programming" ;      edu:level 2 ; edu:requires topic:pandas .
+topic:sql-basics         a edu:Topic ; edu:name "SQL basics" ;           edu:subject "Data" ;             edu:level 1 .
+topic:sql-joins          a edu:Topic ; edu:name "SQL joins" ;            edu:subject "Data" ;             edu:level 2 ; edu:requires topic:sql-basics .
+topic:rdf-sparql         a edu:Topic ; edu:name "RDF and SPARQL" ;       edu:subject "Data" ;             edu:level 2 ; edu:requires topic:sql-joins .
+topic:arithmetic         a edu:Topic ; edu:name "Algebra refresher" ;    edu:subject "Mathematics" ;      edu:level 1 .
+topic:linear-algebra     a edu:Topic ; edu:name "Linear algebra" ;       edu:subject "Mathematics" ;      edu:level 2 ; edu:requires topic:arithmetic .
+topic:calculus           a edu:Topic ; edu:name "Calculus basics" ;      edu:subject "Mathematics" ;      edu:level 2 ; edu:requires topic:arithmetic .
+topic:probability        a edu:Topic ; edu:name "Probability" ;          edu:subject "Mathematics" ;      edu:level 2 ; edu:requires topic:arithmetic .
+topic:statistics         a edu:Topic ; edu:name "Statistics" ;           edu:subject "Mathematics" ;      edu:level 2 ; edu:requires topic:probability .
+topic:regression         a edu:Topic ; edu:name "Linear regression" ;    edu:subject "Machine learning" ; edu:level 3 ; edu:requires topic:statistics , topic:linear-algebra , topic:pandas .
+topic:classification     a edu:Topic ; edu:name "Classification" ;       edu:subject "Machine learning" ; edu:level 3 ; edu:requires topic:regression .
+topic:model-evaluation   a edu:Topic ; edu:name "Model evaluation" ;     edu:subject "Machine learning" ; edu:level 3 ; edu:requires topic:classification .
+topic:clustering         a edu:Topic ; edu:name "Clustering" ;           edu:subject "Machine learning" ; edu:level 3 ; edu:requires topic:linear-algebra , topic:pandas .
+topic:neural-networks    a edu:Topic ; edu:name "Neural networks" ;      edu:subject "Machine learning" ; edu:level 3 ; edu:requires topic:classification , topic:calculus .
+topic:knowledge-graphs   a edu:Topic ; edu:name "Knowledge graphs" ;     edu:subject "Data" ;             edu:level 3 ; edu:requires topic:rdf-sparql , topic:data-structures .
+
+# Courses, each covering topics
+course:DS101 a edu:Course ; edu:code "DS101" ; edu:title "Programming for Data Science" ;
+    edu:covers topic:python-basics , topic:control-flow , topic:functions , topic:data-structures , topic:numpy , topic:pandas , topic:visualization .
+course:MA120 a edu:Course ; edu:code "MA120" ; edu:title "Mathematics for Data Science" ;
+    edu:covers topic:arithmetic , topic:linear-algebra , topic:calculus , topic:probability , topic:statistics .
+course:DB150 a edu:Course ; edu:code "DB150" ; edu:title "Databases and Knowledge Graphs" ;
+    edu:covers topic:sql-basics , topic:sql-joins , topic:rdf-sparql , topic:knowledge-graphs .
+course:ML201 a edu:Course ; edu:code "ML201" ; edu:title "Machine Learning" ;
+    edu:covers topic:regression , topic:classification , topic:model-evaluation , topic:clustering , topic:neural-networks .

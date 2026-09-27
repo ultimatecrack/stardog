@@ -1,0 +1,11 @@
+# Entities for GraphRAG retrieval: every topic and document with its display label.
+# Parameters: none
+PREFIX edu: <http://example.org/edu#>
+
+SELECT ?entity ?label
+WHERE {
+  { ?entity a edu:Topic ; edu:name ?label }
+  UNION
+  { ?entity a edu:Document ; edu:title ?label }
+}
+ORDER BY ?label

@@ -1,0 +1,14 @@
+# Recipes with at least one ingredient in a category or any of its sub-categories.
+# Parameters: ?category (IRI, e.g. category:dairy)
+PREFIX rec:  <http://example.org/recipes#>
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+
+SELECT ?recipe_name (GROUP_CONCAT(DISTINCT ?ingredient; separator=", ") AS ?because_of)
+WHERE {
+  ?recipe a rec:Recipe ; rec:name ?recipe_name ; rec:hasIngredient ?i .
+  ?i rec:name ?ingredient ;
+     rec:inCategory/skos:broader* ?category .
+  FILTER(lang(?recipe_name) = "en")
+}
+GROUP BY ?recipe_name
+ORDER BY ?recipe_name

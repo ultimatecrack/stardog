@@ -1,0 +1,42 @@
+# Stardog rules for the Recipes ontology (Chapter 8).
+# Each rule: IF { pattern } THEN { new triples }. Load into the same graph as the ontology.
+#
+# Rule bodies may use triple patterns, FILTER, BIND and sequence paths (a/b), including
+# properties that are themselves inferred. In our tests, rules containing NOT EXISTS or
+# the path operators * and + produced no results: keep rule bodies positive and simple.
+
+@prefix rule: <tag:stardog:api:rule:> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+[] a rule:SPARQLRule ;
+   rdfs:label "Quick recipe: ready in 20 minutes or less" ;
+   rule:content """
+     PREFIX rec: <http://example.org/recipes#>
+     IF   { ?r a rec:Recipe ; rec:prepMinutes ?m . FILTER(?m <= 20) }
+     THEN { ?r a rec:QuickRecipe . }
+   """ .
+
+[] a rule:SPARQLRule ;
+   rdfs:label "High-protein ingredient: at least 20 g protein per 100 g" ;
+   rule:content """
+     PREFIX rec: <http://example.org/recipes#>
+     IF   { ?i a rec:Ingredient ; rec:proteinPer100g ?p . FILTER(?p >= 20) }
+     THEN { ?i a rec:HighProteinIngredient . }
+   """ .
+
+[] a rule:SPARQLRule ;
+   rdfs:label "High-protein recipe: uses a high-protein ingredient (builds on the rule above)" ;
+   rule:content """
+     PREFIX rec: <http://example.org/recipes#>
+     IF   { ?r a rec:Recipe ; rec:hasIngredient ?i . ?i a rec:HighProteinIngredient . }
+     THEN { ?r a rec:HighProteinRecipe . }
+   """ .
+
+[] a rule:SPARQLRule ;
+   rdfs:label "Speed label computed from the prep time" ;
+   rule:content """
+     PREFIX rec: <http://example.org/recipes#>
+     IF   { ?r a rec:Recipe ; rec:prepMinutes ?m .
+            BIND(IF(?m <= 20, "quick", IF(?m <= 30, "normal", "slow")) AS ?speed) }
+     THEN { ?r rec:speed ?speed . }
+   """ .

@@ -1,0 +1,11 @@
+# Recipes with an ingredient anywhere under a category, found by the category's name. Needs reasoning.
+# Parameters: ?category_name (text, e.g. "Seafood")
+PREFIX rec: <http://example.org/recipes#>
+
+SELECT DISTINCT ?name
+WHERE {
+  ?recipe a rec:Recipe ; rec:name ?name ; rec:hasIngredient/rec:underCategory ?c .
+  ?c rec:name ?category_name .
+  FILTER(lang(?name) = "en")
+}
+ORDER BY ?name

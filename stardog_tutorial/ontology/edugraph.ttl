@@ -1,0 +1,93 @@
+# EduGraph ontology, release 1.1: the current release (Chapter 18).
+# Changes since 1.0 (ontology/versions/edugraph-1.0.ttl): Person, dependsOn, passed/mastered rules;
+# edu:enrolledIn deprecated. Only additions and a deprecation, so a minor version.
+
+@prefix edu:  <http://example.org/edu#> .
+@prefix owl:  <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
+@prefix rule: <tag:stardog:api:rule:> .
+
+<http://example.org/edu/ontology> a owl:Ontology ;
+    owl:versionIRI <http://example.org/edu/ontology/1.1> ;
+    owl:versionInfo "1.1" ;
+    owl:priorVersion <http://example.org/edu/ontology/1.0> ;
+    rdfs:label "EduGraph ontology" ;
+    rdfs:comment "Topics, courses, students, assessments and lesson documents of a data-science school." .
+
+# ---- classes ------------------------------------------------------------------------------------
+
+edu:Topic a owl:Class ; rdfs:label "Topic" ; rdfs:comment "A subject a student can learn, e.g. Linear regression." .
+edu:Course a owl:Class ; rdfs:label "Course" ; rdfs:comment "A course covering several topics." .
+edu:Person a owl:Class ; rdfs:label "Person" ; rdfs:comment "Anyone: students now, teachers later." .
+edu:Student a owl:Class ; rdfs:label "Student" ; rdfs:comment "A student of the school." ;
+    rdfs:subClassOf edu:Person ;
+    owl:disjointWith edu:Topic .
+edu:Assessment a owl:Class ; rdfs:label "Assessment" ; rdfs:comment "One scored test of one student on one topic." .
+edu:Enrollment a owl:Class ; rdfs:label "Enrollment" ; rdfs:comment "A student taking a course in a term." .
+edu:Document a owl:Class ; rdfs:label "Document" ; rdfs:comment "A lesson text." .
+
+# ---- relationships ------------------------------------------------------------------------------
+
+edu:requires a owl:ObjectProperty ; rdfs:label "requires" ; rdfs:domain edu:Topic ; rdfs:range edu:Topic ;
+    rdfs:comment "A direct prerequisite: the subject topic needs the object topic first." ;
+    rdfs:subPropertyOf edu:dependsOn .
+edu:dependsOn a owl:ObjectProperty , owl:TransitiveProperty ; rdfs:label "depends on" ; rdfs:domain edu:Topic ; rdfs:range edu:Topic ;
+    rdfs:comment "A direct or indirect prerequisite (inferred from edu:requires)." .
+edu:passed a owl:ObjectProperty ; rdfs:label "passed" ; rdfs:domain edu:Student ; rdfs:range edu:Topic ;
+    rdfs:comment "Inferred by a rule: the student scored 50 or more on the topic." .
+edu:mastered a owl:ObjectProperty ; rdfs:label "mastered" ; rdfs:domain edu:Student ; rdfs:range edu:Topic ;
+    rdfs:comment "Inferred by a rule: the student scored 80 or more on the topic." ;
+    rdfs:subPropertyOf edu:passed .
+edu:covers a owl:ObjectProperty ; rdfs:label "covers" ; rdfs:domain edu:Course ; rdfs:range edu:Topic ;
+    rdfs:comment "A course teaches this topic." .
+edu:enrolledIn a owl:ObjectProperty ; rdfs:label "enrolled in" ; rdfs:domain edu:Student ; rdfs:range edu:Course ;
+    rdfs:comment "Deprecated in 1.1: use edu:Enrollment (edu:student, edu:course, edu:term), which also records the term." ;
+    owl:deprecated true .
+edu:student a owl:ObjectProperty ; rdfs:label "student" ; rdfs:range edu:Student ;
+    rdfs:comment "The student of an assessment or enrollment." .
+edu:topic a owl:ObjectProperty ; rdfs:label "topic" ; rdfs:range edu:Topic ;
+    rdfs:comment "The topic of an assessment, plan step or link." .
+edu:course a owl:ObjectProperty ; rdfs:label "course" ; rdfs:range edu:Course ;
+    rdfs:comment "The course of an enrollment." .
+edu:teaches a owl:ObjectProperty ; rdfs:label "teaches" ; rdfs:domain edu:Document ; rdfs:range edu:Topic ;
+    rdfs:comment "Extracted and accepted: the document teaches this topic." .
+edu:requiresKnowledgeOf a owl:ObjectProperty ; rdfs:label "requires knowledge of" ; rdfs:domain edu:Document ; rdfs:range edu:Topic ;
+    rdfs:comment "Extracted and accepted: readers of the document must know this topic." .
+edu:mentions a owl:ObjectProperty ; rdfs:label "mentions" ; rdfs:domain edu:Document ; rdfs:range edu:Topic ;
+    rdfs:comment "Extracted and accepted: the document mentions this topic." .
+
+# ---- attributes (no domains: several classes share them) -----------------------------------------
+
+edu:name a owl:DatatypeProperty ; rdfs:label "name" ; rdfs:range xsd:string ; rdfs:comment "Display name." .
+edu:subject a owl:DatatypeProperty ; rdfs:label "subject" ; rdfs:range xsd:string ; rdfs:comment "Subject area of a topic." .
+edu:level a owl:DatatypeProperty ; rdfs:label "level" ; rdfs:range xsd:integer ; rdfs:comment "1 = beginner … 3 = advanced." .
+edu:code a owl:DatatypeProperty ; rdfs:label "code" ; rdfs:range xsd:string ; rdfs:comment "Course code, e.g. ML201." .
+edu:title a owl:DatatypeProperty ; rdfs:label "title" ; rdfs:range xsd:string ; rdfs:comment "Title of a course or document." .
+edu:studentId a owl:DatatypeProperty ; rdfs:label "student id" ; rdfs:range xsd:string ; rdfs:comment "School id, e.g. S023." .
+edu:email a owl:DatatypeProperty ; rdfs:label "email" ; rdfs:range xsd:string ; rdfs:comment "Student email address." .
+edu:city a owl:DatatypeProperty ; rdfs:label "city" ; rdfs:range xsd:string ; rdfs:comment "City of the campus." .
+edu:year a owl:DatatypeProperty ; rdfs:label "year" ; rdfs:range xsd:integer ; rdfs:comment "Study year, 1 to 4." .
+edu:enrolledOn a owl:DatatypeProperty ; rdfs:label "enrolled on" ; rdfs:range xsd:date ; rdfs:comment "Date the student joined." .
+edu:score a owl:DatatypeProperty ; rdfs:label "score" ; rdfs:comment "Assessment score 0-100 (or a link similarity 0-1)." .
+edu:takenOn a owl:DatatypeProperty ; rdfs:label "taken on" ; rdfs:range xsd:date ; rdfs:comment "Date of an assessment." .
+edu:term a owl:DatatypeProperty ; rdfs:label "term" ; rdfs:range xsd:string ; rdfs:comment "Academic term, e.g. 2025-S1." .
+edu:source a owl:DatatypeProperty ; rdfs:label "source" ; rdfs:range xsd:string ; rdfs:comment "File a document was read from." .
+
+# ---- rules --------------------------------------------------------------------------------------
+
+[] a rule:SPARQLRule ;
+   rdfs:label "Passed: an assessment score of 50 or more" ;
+   rule:content """
+     PREFIX edu: <http://example.org/edu#>
+     IF   { ?a edu:student ?s ; edu:topic ?t ; edu:score ?score . FILTER(?score >= 50) }
+     THEN { ?s edu:passed ?t . }
+   """ .
+
+[] a rule:SPARQLRule ;
+   rdfs:label "Mastered: an assessment score of 80 or more" ;
+   rule:content """
+     PREFIX edu: <http://example.org/edu#>
+     IF   { ?a edu:student ?s ; edu:topic ?t ; edu:score ?score . FILTER(?score >= 80) }
+     THEN { ?s edu:mastered ?t . }
+   """ .

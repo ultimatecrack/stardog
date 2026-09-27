@@ -1,0 +1,10 @@
+# The allergens of one recipe, found by its English name. Needs reasoning.
+# Parameters: ?recipe_name (text, e.g. "Pad Thai")
+PREFIX rec: <http://example.org/recipes#>
+
+SELECT DISTINCT ?allergen
+WHERE {
+  ?recipe rec:name ?name ; rec:containsAllergen/rec:name ?allergen .
+  FILTER(STR(?name) = ?recipe_name)
+}
+ORDER BY ?allergen

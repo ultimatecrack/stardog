@@ -1,0 +1,19 @@
+# Readable facts about one entity (recipe, ingredient, allergen or category), in both directions. Use with reasoning.
+# Parameters: ?entity (IRI)
+PREFIX rec: <http://example.org/recipes#>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+
+SELECT DISTINCT ?s ?p ?o
+WHERE {
+  { ?entity ?prop ?value .  BIND(?entity AS ?subject) BIND(?value AS ?object) }
+  UNION
+  { ?value ?prop ?entity .  BIND(?value AS ?subject) BIND(?entity AS ?object) }
+  FILTER(?prop IN (rdf:type, rec:cuisine, rec:prepMinutes, rec:servings, rec:hasIngredient, rec:containsAllergen,
+                   rec:hasAllergen, rec:inCategory, rec:underCategory, rec:proteinPer100g, rec:kcalPer100g))
+  FILTER(?prop != rdf:type || STRSTARTS(STR(?object), STR(rec:)))
+  ?subject rec:name ?s .  FILTER(lang(?s) IN ("en", ""))
+  OPTIONAL { ?object rec:name ?object_name  FILTER(lang(?object_name) IN ("en", "")) }
+  BIND(COALESCE(?object_name, IF(isIRI(?object), STRAFTER(STR(?object), "#"), STR(?object))) AS ?o)
+  BIND(STRAFTER(STR(?prop), "#") AS ?p)
+}
+ORDER BY ?s ?p ?o

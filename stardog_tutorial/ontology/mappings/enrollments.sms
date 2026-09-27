@@ -1,0 +1,18 @@
+# SMS2 mapping: enrollments.csv -> RDF (Chapter 10).
+# Columns: student_id, course_code, term
+PREFIX edu: <http://example.org/edu#>
+
+MAPPING <urn:tutorial:mapping:enrollments>
+FROM CSV { }
+TO {
+  ?student edu:enrolledIn ?course .
+  ?enrollment a edu:Enrollment ;
+      edu:student ?student ;
+      edu:course ?course ;
+      edu:term ?term .
+}
+WHERE {
+  BIND(TEMPLATE("http://example.org/edu/student/{student_id}") AS ?student)
+  BIND(TEMPLATE("http://example.org/edu/course/{course_code}") AS ?course)
+  BIND(TEMPLATE("http://example.org/edu/enrollment/{student_id}-{course_code}") AS ?enrollment)
+}

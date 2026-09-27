@@ -1,0 +1,22 @@
+# SMS2 mapping: school information system export students.csv -> RDF (Chapter 10).
+# Columns: student_id, first_name, last_name, email, city, year, enrolled_on
+PREFIX edu: <http://example.org/edu#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+MAPPING <urn:tutorial:mapping:students>
+FROM CSV { }
+TO {
+  ?student a edu:Student ;
+      edu:studentId ?student_id ;
+      edu:name ?full_name ;
+      edu:email ?email ;
+      edu:city ?city ;
+      edu:year ?year_number ;
+      edu:enrolledOn ?enrolled_date .
+}
+WHERE {
+  BIND(TEMPLATE("http://example.org/edu/student/{student_id}") AS ?student)
+  BIND(CONCAT(?first_name, " ", ?last_name) AS ?full_name)
+  BIND(xsd:integer(?year) AS ?year_number)
+  BIND(xsd:date(?enrolled_on) AS ?enrolled_date)
+}

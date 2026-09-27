@@ -1,0 +1,23 @@
+# SMS2 mapping for a LIVE virtual graph (Chapter 10, section 10.7): the same students, read from a
+# `students` table in a relational database instead of a CSV file. Only the FROM clause changes.
+PREFIX edu: <http://example.org/edu#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+MAPPING <urn:tutorial:mapping:students-sql>
+FROM SQL {
+  SELECT student_id, first_name, last_name, email, city, year, enrolled_on
+  FROM students
+}
+TO {
+  ?student a edu:Student ;
+      edu:studentId ?student_id ;
+      edu:name ?full_name ;
+      edu:email ?email ;
+      edu:city ?city ;
+      edu:year ?year ;
+      edu:enrolledOn ?enrolled_on .
+}
+WHERE {
+  BIND(TEMPLATE("http://example.org/edu/student/{student_id}") AS ?student)
+  BIND(CONCAT(?first_name, " ", ?last_name) AS ?full_name)
+}

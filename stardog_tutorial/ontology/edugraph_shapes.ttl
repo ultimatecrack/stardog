@@ -1,0 +1,70 @@
+# SHACL guardrails for learning plans written by the tutor agent (Chapter 17).
+# An agent may only write a plan that passes these shapes. Several constraints read the curriculum
+# (edu:requires) and the student's scores, so validate together with those graphs.
+
+@prefix sh:   <http://www.w3.org/ns/shacl#> .
+@prefix edu:  <http://example.org/edu#> .
+@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+edu:LearningPlanShape a sh:NodeShape ;
+    rdfs:label "Learning plan" ;
+    sh:targetClass edu:LearningPlan ;
+
+    sh:property [ sh:path edu:forStudent ; sh:minCount 1 ; sh:maxCount 1 ; sh:class edu:Student ;
+                  sh:message "The plan must be for exactly one known student." ] ;
+    sh:property [ sh:path edu:targetTopic ; sh:minCount 1 ; sh:maxCount 1 ; sh:class edu:Topic ;
+                  sh:message "The plan must have exactly one known target topic." ] ;
+    sh:property [ sh:path edu:rationale ; sh:minCount 1 ;
+                  sh:message "The plan must explain why (rationale)." ] ;
+    sh:property [ sh:path edu:step ; sh:minCount 1 ; sh:maxCount 8 ; sh:node edu:PlanStepShape ;
+                  sh:message "The plan needs 1 to 8 valid steps." ] ;
+
+    sh:sparql [ a sh:SPARQLConstraint ;
+        sh:message "The last step must be the target topic itself." ;
+        sh:select """
+            PREFIX edu: <http://example.org/edu#>
+            SELECT $this ?value WHERE {
+              $this edu:targetTopic ?target ; edu:step ?last .
+              ?last edu:position ?max ; edu:topic ?value .
+              FILTER NOT EXISTS { $this edu:step/edu:position ?later FILTER(?later > ?max) }
+              FILTER(?value != ?target)
+            }""" ] ;
+
+    sh:sparql [ a sh:SPARQLConstraint ;
+        sh:message "A prerequisite is planned after a topic that needs it." ;
+        sh:select """
+            PREFIX edu: <http://example.org/edu#>
+            SELECT $this ?value WHERE {
+              $this edu:step ?a , ?b .
+              ?a edu:topic ?value ; edu:position ?pa .
+              ?b edu:topic ?needs ; edu:position ?pb .
+              ?needs edu:requires+ ?value .
+              FILTER(?pb < ?pa)
+            }""" ] ;
+
+    sh:sparql [ a sh:SPARQLConstraint ;
+        sh:message "A step is neither the target topic nor one of its prerequisites." ;
+        sh:select """
+            PREFIX edu: <http://example.org/edu#>
+            SELECT $this ?value WHERE {
+              $this edu:targetTopic ?target ; edu:step/edu:topic ?value .
+              FILTER(?value != ?target)
+              FILTER NOT EXISTS { ?target edu:requires+ ?value }
+            }""" ] ;
+
+    sh:sparql [ a sh:SPARQLConstraint ;
+        sh:message "A direct prerequisite of the target is missing, and the student has not passed it (score 50+)." ;
+        sh:select """
+            PREFIX edu: <http://example.org/edu#>
+            SELECT $this ?value WHERE {
+              $this edu:targetTopic ?target ; edu:forStudent ?student .
+              ?target edu:requires ?value .
+              FILTER NOT EXISTS { $this edu:step/edu:topic ?value }
+              FILTER NOT EXISTS { ?a edu:student ?student ; edu:topic ?value ; edu:score ?s  FILTER(?s >= 50) }
+            }""" ] .
+
+edu:PlanStepShape a sh:NodeShape ;
+    rdfs:label "Plan step" ;
+    sh:property [ sh:path edu:position ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:integer ; sh:minInclusive 1 ] ;
+    sh:property [ sh:path edu:topic ; sh:minCount 1 ; sh:maxCount 1 ; sh:class edu:Topic ] .

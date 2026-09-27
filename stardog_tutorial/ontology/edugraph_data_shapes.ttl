@@ -1,0 +1,57 @@
+# SHACL quality gate for EduGraph data (Chapter 18): what every ingested batch must satisfy
+# before it is promoted to the live graphs. Validate together with the curriculum, so sh:class
+# checks can see the known topics and courses.
+
+@prefix sh:   <http://www.w3.org/ns/shacl#> .
+@prefix edu:  <http://example.org/edu#> .
+@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+edu:StudentShape a sh:NodeShape ;
+    rdfs:label "Student" ;
+    sh:targetClass edu:Student ;
+    sh:property [ sh:path edu:studentId ; sh:minCount 1 ; sh:maxCount 1 ; sh:pattern "^S[0-9]{3}$" ;
+                  sh:message "A student needs exactly one id like S023." ] ;
+    sh:property [ sh:path edu:name ; sh:minCount 1 ; sh:maxCount 1 ; sh:minLength 3 ;
+                  sh:message "A student needs a name." ] ;
+    sh:property [ sh:path edu:email ; sh:minCount 1 ; sh:pattern "^[^@ ]+@[^@ ]+[.][a-z]+$" ;
+                  sh:message "A student needs a valid email address." ] ;
+    sh:property [ sh:path edu:year ; sh:maxCount 1 ; sh:datatype xsd:integer ; sh:minInclusive 1 ; sh:maxInclusive 4 ;
+                  sh:message "Study year must be an integer from 1 to 4." ] .
+
+edu:AssessmentShape a sh:NodeShape ;
+    rdfs:label "Assessment" ;
+    sh:targetClass edu:Assessment ;
+    sh:property [ sh:path edu:student ; sh:minCount 1 ; sh:maxCount 1 ; sh:class edu:Student ;
+                  sh:message "An assessment belongs to exactly one known student." ] ;
+    sh:property [ sh:path edu:topic ; sh:minCount 1 ; sh:maxCount 1 ; sh:class edu:Topic ;
+                  sh:message "An assessment is about exactly one known topic." ] ;
+    sh:property [ sh:path edu:score ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:integer ;
+                  sh:minInclusive 0 ; sh:maxInclusive 100 ;
+                  sh:message "A score must be one integer from 0 to 100." ] ;
+    sh:property [ sh:path edu:takenOn ; sh:minCount 1 ; sh:datatype xsd:date ;
+                  sh:message "An assessment needs a valid date." ] .
+
+edu:EnrollmentShape a sh:NodeShape ;
+    rdfs:label "Enrollment" ;
+    sh:targetClass edu:Enrollment ;
+    sh:property [ sh:path edu:student ; sh:minCount 1 ; sh:class edu:Student ;
+                  sh:message "An enrollment needs a known student." ] ;
+    sh:property [ sh:path edu:course ; sh:minCount 1 ; sh:class edu:Course ;
+                  sh:message "An enrollment needs a known course." ] ;
+    sh:property [ sh:path edu:term ; sh:minCount 1 ; sh:pattern "^[0-9]{4}-S[12]$" ;
+                  sh:message "A term looks like 2025-S1." ] .
+
+edu:TopicShape a sh:NodeShape ;
+    rdfs:label "Topic" ;
+    sh:targetClass edu:Topic ;
+    sh:property [ sh:path edu:name ; sh:minCount 1 ; sh:maxCount 1 ; sh:message "A topic needs one name." ] ;
+    sh:property [ sh:path edu:level ; sh:minCount 1 ; sh:minInclusive 1 ; sh:maxInclusive 3 ;
+                  sh:message "A topic level is 1, 2 or 3." ] ;
+    sh:property [ sh:path edu:requires ; sh:class edu:Topic ; sh:message "A prerequisite must be a known topic." ] .
+
+edu:DocumentShape a sh:NodeShape ;
+    rdfs:label "Document" ;
+    sh:targetClass edu:Document ;
+    sh:property [ sh:path edu:title ; sh:minCount 1 ; sh:maxCount 1 ; sh:message "A document needs one title." ] ;
+    sh:property [ sh:path edu:teaches ; sh:class edu:Topic ; sh:message "A document can only teach known topics." ] .

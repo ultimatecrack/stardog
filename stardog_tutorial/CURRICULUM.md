@@ -170,4 +170,17 @@ stardog_tutorial/
 | 3 | ✅ Written and run against Stardog Cloud |
 | 4 | ✅ Written and run against Stardog Cloud (includes Mini-project 1) |
 | 5 | ✅ Written and run against Stardog Cloud |
-| 6-18 | Not started |
+| 6 | ✅ Written and run against Stardog Cloud |
+| 7 | ✅ Written and run against Stardog Cloud |
+| 8 | ✅ Written and run against Stardog Cloud |
+| 9 | ✅ Written and run against Stardog Cloud (includes Mini-project 2) |
+| 10 | ✅ Written and run against Stardog Cloud (CSV imports; live virtual graph runs only with your own DB in `.env`) |
+| 11 | ✅ Written and run (Stardog Cloud + local Ollama: qwen2.5:7b, nomic-embed-text) |
+| 12 | ✅ Written and run (switches `search.enabled` / `spatial.enabled` on briefly, restores them at the end) |
+| 13 | ✅ Written and run against Stardog Cloud (API tested in-process and over HTTP) |
+| 14 | ✅ Written and run against Stardog Cloud (includes Mini-project 3; creates and removes tutorial users/roles) |
+| 15 | ✅ Written and run against Stardog Cloud (loads ~610k generated triples temporarily; lowers `query.timeout` briefly and restores it) |
+| 15b | ✅ Written and run (Spark connector runs locally with the portable Java 11 in `tools/`) |
+| 16 | ✅ Written and run (local Ollama; no Voicebox token, so the Voicebox cell is skipped) |
+| 17 | ✅ Written and run (local Ollama qwen2.5:7b; agent conversations cached in `data/edugraph/agent_llm_cache.json`; evaluation: 3/5 plans saved by the basic agent, 4/5 with `order_topics` + orchestrator, no invalid plan ever written) |
+| 18 | Not started |

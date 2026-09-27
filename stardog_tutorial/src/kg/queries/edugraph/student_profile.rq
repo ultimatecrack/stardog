@@ -1,0 +1,12 @@
+# One student's profile: name, city, year, courses, number of assessments and average score.
+# Parameters: ?student (IRI, e.g. student:S001)
+PREFIX edu: <http://example.org/edu#>
+
+SELECT ?name ?city ?year (GROUP_CONCAT(DISTINCT ?course; separator=", ") AS ?courses)
+       (COUNT(DISTINCT ?a) AS ?assessments) (ROUND(AVG(?score)) AS ?avg_score)
+WHERE {
+  ?student a edu:Student ; edu:name ?name ; edu:city ?city ; edu:year ?year .
+  OPTIONAL { ?student edu:enrolledIn/edu:code ?course }
+  OPTIONAL { ?a edu:student ?student ; edu:score ?score }
+}
+GROUP BY ?name ?city ?year

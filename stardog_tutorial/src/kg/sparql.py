@@ -73,20 +73,28 @@ def _options(graphs, params, kwargs):
   return kwargs
 
 
-def run_query(conn: stardog.Connection, query: str, graphs=None, *, reasoning=False,
+def run_query(conn: stardog.Connection, query: str, graphs=None, *, reasoning=False, schema=None,
               limit=None, **params) -> pd.DataFrame:
   """Run a SELECT (by .rq name or text) and return a typed DataFrame.
 
   graphs: one graph IRI or a list of them to query (merged).
+  reasoning/schema: reason with the named model `schema` (Chapters 7-8).
   **params: values for query variables, e.g. max_minutes=30 binds ?max_minutes.
   """
-  kwargs = _options(graphs, params, {'reasoning': reasoning or None, 'limit': limit})
+  kwargs = _options(graphs, params, {'reasoning': reasoning or None, 'schema': schema, 'limit': limit})
   return to_df(conn.select(_text(query), **kwargs))
 
 
-def ask(conn: stardog.Connection, query: str, graphs=None, **params) -> bool:
+def run_stored(conn: stardog.Connection, name: str, graphs=None, *, reasoning=False, schema=None,
+               limit=None, **params) -> pd.DataFrame:
+  """Run a query stored on the Stardog server under `name` (Chapter 13), with the same options as run_query."""
+  kwargs = _options(graphs, params, {'reasoning': reasoning or None, 'schema': schema, 'limit': limit})
+  return to_df(conn.select(name, **kwargs))
+
+
+def ask(conn: stardog.Connection, query: str, graphs=None, *, reasoning=False, schema=None, **params) -> bool:
   """Run an ASK query."""
-  return conn.ask(_text(query), **_options(graphs, params, {}))
+  return conn.ask(_text(query), **_options(graphs, params, {'reasoning': reasoning or None, 'schema': schema}))
 
 
 def construct(conn: stardog.Connection, query: str, graphs=None, **params) -> Graph:

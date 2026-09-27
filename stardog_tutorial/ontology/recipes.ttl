@@ -1,0 +1,228 @@
+# Recipes & Nutrition ontology (Chapter 7).
+# The model (classes and properties) for the data in data/recipes/.
+
+@prefix rec:      <http://example.org/recipes#> .
+@prefix allergen: <http://example.org/recipes/allergen/> .
+@prefix category: <http://example.org/recipes/category/> .
+@prefix owl:      <http://www.w3.org/2002/07/owl#> .
+@prefix rdf:      <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:     <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd:      <http://www.w3.org/2001/XMLSchema#> .
+@prefix skos:     <http://www.w3.org/2004/02/skos/core#> .
+@prefix dcterms:  <http://purl.org/dc/terms/> .
+
+<http://example.org/recipes> a owl:Ontology ;
+    rdfs:label "Recipes & Nutrition"@en ;
+    dcterms:description "Recipes, their ingredients, ingredient categories, allergens and user ratings."@en ;
+    owl:versionInfo "1.0" .
+
+#################################################################
+# Classes
+#################################################################
+
+rec:Recipe a owl:Class ;
+    rdfs:label "Recipe"@en ;
+    rdfs:comment "A dish that can be cooked."@en .
+
+rec:Ingredient a owl:Class ;
+    rdfs:label "Ingredient"@en ;
+    rdfs:comment "A food item used in recipes."@en .
+
+rec:IngredientLine a owl:Class ;
+    rdfs:label "Ingredient line"@en ;
+    rdfs:comment "An amount of one ingredient in one recipe, e.g. 200 g spaghetti."@en .
+
+rec:Category a owl:Class ;
+    rdfs:subClassOf skos:Concept ;
+    rdfs:label "Category"@en ;
+    rdfs:comment "A node in the ingredient category taxonomy (Cheese, Dairy, Food, ...)."@en .
+
+rec:Allergen a owl:Class ;
+    rdfs:label "Allergen"@en ;
+    rdfs:comment "One of the 14 major food allergens."@en .
+
+rec:User a owl:Class ;
+    rdfs:label "User"@en ;
+    rdfs:comment "A person who rates recipes."@en .
+
+rec:Rating a owl:Class ;
+    rdfs:label "Rating"@en ;
+    rdfs:comment "One user's score (1-5) for one recipe."@en .
+
+# Nothing can be both, e.g. a Recipe and an Ingredient.
+[] a owl:AllDisjointClasses ;
+    owl:members ( rec:Recipe rec:Ingredient rec:IngredientLine rec:Category rec:Allergen rec:User rec:Rating ) .
+
+#################################################################
+# Defined classes: membership follows from the data (Chapter 8)
+#################################################################
+
+rec:DairyRecipe a owl:Class ;
+    rdfs:label "Dairy recipe"@en ;
+    rdfs:comment "A recipe with at least one ingredient that carries the Milk allergen."@en ;
+    owl:equivalentClass [
+        owl:intersectionOf ( rec:Recipe
+                             [ a owl:Restriction ;
+                               owl:onProperty rec:hasIngredient ;
+                               owl:someValuesFrom [ a owl:Restriction ;
+                                                    owl:onProperty rec:hasAllergen ;
+                                                    owl:hasValue allergen:milk ] ] )
+    ] .
+
+rec:SeafoodRecipe a owl:Class ;
+    rdfs:label "Seafood recipe"@en ;
+    rdfs:comment "A recipe with at least one ingredient anywhere under the Seafood category."@en ;
+    owl:equivalentClass [
+        owl:intersectionOf ( rec:Recipe
+                             [ a owl:Restriction ;
+                               owl:onProperty rec:hasIngredient ;
+                               owl:someValuesFrom [ a owl:Restriction ;
+                                                    owl:onProperty rec:underCategory ;
+                                                    owl:hasValue category:seafood ] ] )
+    ] .
+
+#################################################################
+# Object properties (links between things)
+#################################################################
+
+rec:hasIngredient a owl:ObjectProperty ;
+    rdfs:label "has ingredient"@en ;
+    rdfs:domain rec:Recipe ;
+    rdfs:range rec:Ingredient ;
+    owl:inverseOf rec:isIngredientOf .
+
+rec:isIngredientOf a owl:ObjectProperty ;
+    rdfs:label "is ingredient of"@en ;
+    rdfs:comment "Never stored: inferred from hasIngredient (Chapter 8)."@en .
+
+rec:hasIngredientLine a owl:ObjectProperty ;
+    rdfs:label "has ingredient line"@en ;
+    rdfs:domain rec:Recipe ;
+    rdfs:range rec:IngredientLine .
+
+rec:ingredient a owl:ObjectProperty , owl:FunctionalProperty ;
+    rdfs:label "ingredient"@en ;
+    rdfs:comment "The ingredient an ingredient line measures. Exactly one per line."@en ;
+    rdfs:domain rec:IngredientLine ;
+    rdfs:range rec:Ingredient .
+
+rec:inCategory a owl:ObjectProperty ;
+    rdfs:label "in category"@en ;
+    rdfs:domain rec:Ingredient ;
+    rdfs:range rec:Category ;
+    rdfs:subPropertyOf rec:underCategory .
+
+skos:broader a owl:ObjectProperty ;
+    rdfs:label "broader category"@en ;
+    rdfs:subPropertyOf skos:broaderTransitive .
+
+skos:broaderTransitive a owl:ObjectProperty , owl:TransitiveProperty ;
+    rdfs:label "broader category (any level)"@en .
+
+rec:underCategory a owl:ObjectProperty ;
+    rdfs:label "under category"@en ;
+    rdfs:comment "An ingredient's category or any category above it. Inferred, never stored."@en ;
+    rdfs:domain rec:Ingredient ;
+    rdfs:range rec:Category ;
+    # underCategory followed by broaderTransitive is again underCategory
+    owl:propertyChainAxiom ( rec:underCategory skos:broaderTransitive ) .
+
+rec:hasAllergen a owl:ObjectProperty ;
+    rdfs:label "has allergen"@en ;
+    rdfs:domain rec:Ingredient ;
+    rdfs:range rec:Allergen .
+
+rec:containsAllergen a owl:ObjectProperty ;
+    rdfs:label "contains allergen"@en ;
+    rdfs:comment "A recipe contains the allergens of its ingredients. Inferred, never stored."@en ;
+    rdfs:domain rec:Recipe ;
+    rdfs:range rec:Allergen ;
+    owl:propertyChainAxiom ( rec:hasIngredient rec:hasAllergen ) .
+
+rec:ofRecipe a owl:ObjectProperty , owl:FunctionalProperty ;
+    rdfs:label "of recipe"@en ;
+    rdfs:domain rec:Rating ;
+    rdfs:range rec:Recipe ;
+    owl:inverseOf rec:hasRating .
+
+rec:hasRating a owl:ObjectProperty ;
+    rdfs:label "has rating"@en .
+
+rec:byUser a owl:ObjectProperty , owl:FunctionalProperty ;
+    rdfs:label "by user"@en ;
+    rdfs:domain rec:Rating ;
+    rdfs:range rec:User .
+
+#################################################################
+# Datatype properties (values)
+#################################################################
+
+rec:name a owl:DatatypeProperty ;
+    rdfs:label "name"@en ;
+    rdfs:comment "Display name of anything. Recipes have language-tagged names."@en ;
+    rdfs:subPropertyOf rdfs:label .
+
+rec:recipeId a owl:DatatypeProperty , owl:FunctionalProperty ;
+    rdfs:label "recipe id"@en ;
+    rdfs:domain rec:Recipe ;
+    rdfs:range xsd:string .
+
+rec:ingredientId a owl:DatatypeProperty , owl:FunctionalProperty ;
+    rdfs:label "ingredient id"@en ;
+    rdfs:domain rec:Ingredient ;
+    rdfs:range xsd:string .
+
+rec:cuisine a owl:DatatypeProperty ;
+    rdfs:label "cuisine"@en ;
+    rdfs:domain rec:Recipe ;
+    rdfs:range xsd:string .
+
+rec:prepMinutes a owl:DatatypeProperty , owl:FunctionalProperty ;
+    rdfs:label "preparation time (minutes)"@en ;
+    rdfs:domain rec:Recipe ;
+    rdfs:range xsd:integer .
+
+rec:servings a owl:DatatypeProperty , owl:FunctionalProperty ;
+    rdfs:label "servings"@en ;
+    rdfs:domain rec:Recipe ;
+    rdfs:range xsd:integer .
+
+rec:created a owl:DatatypeProperty , owl:FunctionalProperty ;
+    rdfs:label "created"@en ;
+    rdfs:domain rec:Recipe ;
+    rdfs:range xsd:date .
+
+rec:description a owl:DatatypeProperty ;
+    rdfs:label "description"@en ;
+    rdfs:domain rec:Recipe ;
+    rdfs:range rdf:langString .
+
+rec:quantity a owl:DatatypeProperty , owl:FunctionalProperty ;
+    rdfs:label "quantity"@en ;
+    rdfs:domain rec:IngredientLine ;
+    rdfs:range xsd:decimal .
+
+rec:unit a owl:DatatypeProperty , owl:FunctionalProperty ;
+    rdfs:label "unit"@en ;
+    rdfs:domain rec:IngredientLine ;
+    rdfs:range xsd:string .
+
+rec:kcalPer100g a owl:DatatypeProperty , owl:FunctionalProperty ;
+    rdfs:label "energy (kcal per 100 g)"@en ;
+    rdfs:domain rec:Ingredient ;
+    rdfs:range xsd:decimal .
+
+rec:proteinPer100g a owl:DatatypeProperty , owl:FunctionalProperty ;
+    rdfs:label "protein (g per 100 g)"@en ;
+    rdfs:domain rec:Ingredient ;
+    rdfs:range xsd:decimal .
+
+rec:score a owl:DatatypeProperty , owl:FunctionalProperty ;
+    rdfs:label "score"@en ;
+    rdfs:domain rec:Rating ;
+    rdfs:range xsd:integer .
+
+rec:ratedOn a owl:DatatypeProperty , owl:FunctionalProperty ;
+    rdfs:label "rated on"@en ;
+    rdfs:domain rec:Rating ;
+    rdfs:range xsd:date .

@@ -1,0 +1,20 @@
+# Recipes with no ingredient anywhere under Meat or Seafood, and no fish or shellfish allergen. Needs reasoning.
+# Parameters: none (run with reasoning=True and the recipes model)
+PREFIX rec:      <http://example.org/recipes#>
+PREFIX category: <http://example.org/recipes/category/>
+PREFIX allergen: <http://example.org/recipes/allergen/>
+
+SELECT ?recipe ?name
+WHERE {
+  ?recipe a rec:Recipe ; rec:name ?name .
+  FILTER(lang(?name) = "en")
+  FILTER NOT EXISTS {
+    ?recipe rec:hasIngredient/rec:underCategory ?c .
+    VALUES ?c { category:meat category:seafood }
+  }
+  FILTER NOT EXISTS {
+    ?recipe rec:containsAllergen ?a .
+    VALUES ?a { allergen:fish allergen:crustaceans allergen:molluscs }
+  }
+}
+ORDER BY ?name

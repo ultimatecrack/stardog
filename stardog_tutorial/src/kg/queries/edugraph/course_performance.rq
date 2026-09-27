@@ -1,0 +1,14 @@
+# Per course: enrolled students, assessments taken on the course's topics, and the average score.
+# Parameters: none
+PREFIX edu: <http://example.org/edu#>
+
+SELECT ?course ?title ?students ?assessments ?avg_score
+WHERE {
+  ?c a edu:Course ; edu:code ?course ; edu:title ?title .
+  { SELECT ?c (COUNT(DISTINCT ?s) AS ?students) WHERE { ?s edu:enrolledIn ?c } GROUP BY ?c }
+  # separate subquery: an AVG over OPTIONAL (partly unbound) values would fail for the whole group
+  { SELECT ?c (COUNT(?a) AS ?assessments) (ROUND(AVG(?score)) AS ?avg_score)
+    WHERE { ?c edu:covers ?t . ?s edu:enrolledIn ?c . ?a edu:student ?s ; edu:topic ?t ; edu:score ?score }
+    GROUP BY ?c }
+}
+ORDER BY ?course

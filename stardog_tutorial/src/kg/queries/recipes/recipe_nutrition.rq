@@ -1,0 +1,19 @@
+# Energy and protein per serving, from ingredient lines measured in grams.
+# Parameters: none
+PREFIX rec: <http://example.org/recipes#>
+
+SELECT ?recipe_name ?servings
+       (ROUND(SUM(?kcal) / ?servings) AS ?kcal_per_serving)
+       (ROUND(SUM(?protein) / ?servings) AS ?protein_g_per_serving)
+       (COUNT(?line) AS ?lines_counted)
+WHERE {
+  ?recipe a rec:Recipe ; rec:name ?recipe_name ; rec:servings ?servings ;
+          rec:hasIngredientLine ?line .
+  FILTER(lang(?recipe_name) = "en")
+  ?line rec:unit "g" ; rec:quantity ?grams ; rec:ingredient ?i .
+  ?i rec:kcalPer100g ?kcal100 ; rec:proteinPer100g ?protein100 .
+  BIND(?grams * ?kcal100 / 100 AS ?kcal)
+  BIND(?grams * ?protein100 / 100 AS ?protein)
+}
+GROUP BY ?recipe_name ?servings
+ORDER BY DESC(?protein_g_per_serving)

@@ -1,0 +1,12 @@
+# All topics with subject, level and number of direct prerequisites.
+# Parameters: none
+PREFIX edu: <http://example.org/edu#>
+
+SELECT ?id ?name ?subject ?level (COUNT(?p) AS ?direct_prerequisites)
+WHERE {
+  ?t a edu:Topic ; edu:name ?name ; edu:subject ?subject ; edu:level ?level .
+  OPTIONAL { ?t edu:requires ?p }
+  BIND(STRAFTER(STR(?t), "/topic/") AS ?id)
+}
+GROUP BY ?id ?name ?subject ?level
+ORDER BY ?level ?name

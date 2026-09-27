@@ -1,0 +1,21 @@
+# SMS2 mapping: assessments.csv -> RDF (Chapter 10).
+# Columns: assessment_id, student_id, topic, score, taken_on
+PREFIX edu: <http://example.org/edu#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+MAPPING <urn:tutorial:mapping:assessments>
+FROM CSV { }
+TO {
+  ?assessment a edu:Assessment ;
+      edu:student ?student ;
+      edu:topic ?topic_iri ;
+      edu:score ?score_number ;
+      edu:takenOn ?taken_date .
+}
+WHERE {
+  BIND(TEMPLATE("http://example.org/edu/assessment/{assessment_id}") AS ?assessment)
+  BIND(TEMPLATE("http://example.org/edu/student/{student_id}") AS ?student)
+  BIND(TEMPLATE("http://example.org/edu/topic/{topic}") AS ?topic_iri)
+  BIND(xsd:integer(?score) AS ?score_number)
+  BIND(xsd:date(?taken_on) AS ?taken_date)
+}

@@ -1,0 +1,176 @@
+# SHACL shapes for the Recipes dataset (Chapter 9).
+# Closed-world data quality rules: what valid data must look like.
+#
+# Severities: sh:Violation (default) = reject, sh:Warning = accept but flag, sh:Info = nice to know.
+
+@prefix sh:   <http://www.w3.org/ns/shacl#> .
+@prefix rec:  <http://example.org/recipes#> .
+@prefix rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
+
+#################################################################
+# Recipes
+#################################################################
+
+rec:RecipeShape a sh:NodeShape ;
+    rdfs:label "Recipe" ;
+    sh:targetClass rec:Recipe ;
+
+    sh:property [
+        sh:path rec:recipeId ;
+        sh:minCount 1 ; sh:maxCount 1 ;
+        sh:pattern "^R[0-9]{2,}$" ;
+        sh:message "recipeId: exactly one, like R15" ] ;
+
+    sh:property [
+        sh:path rec:name ;
+        sh:minCount 1 ;
+        sh:uniqueLang true ;
+        sh:message "name: at least one, and at most one per language" ] ;
+
+    sh:property [
+        sh:path rec:name ;
+        sh:qualifiedValueShape [ sh:languageIn ( "en" ) ] ;
+        sh:qualifiedMinCount 1 ;
+        sh:message "name: an English name is required" ] ;
+
+    sh:property [
+        sh:path rec:prepMinutes ;
+        sh:minCount 1 ; sh:maxCount 1 ;
+        sh:datatype xsd:integer ;
+        sh:minInclusive 1 ; sh:maxInclusive 600 ;
+        sh:message "prepMinutes: exactly one whole number of minutes, 1-600" ] ;
+
+    sh:property [
+        sh:path rec:servings ;
+        sh:minCount 1 ; sh:maxCount 1 ;
+        sh:datatype xsd:integer ;
+        sh:minInclusive 1 ; sh:maxInclusive 50 ;
+        sh:message "servings: exactly one whole number, 1-50" ] ;
+
+    sh:property [
+        sh:path rec:cuisine ;
+        sh:minCount 1 ; sh:maxCount 1 ;
+        sh:datatype xsd:string ;
+        sh:message "cuisine: exactly one, as plain text" ] ;
+
+    sh:property [
+        sh:path rec:cuisine ;
+        sh:in ( "American" "Chinese" "French" "German" "Indian" "Italian" "Mediterranean" "Thai" ) ;
+        sh:severity sh:Warning ;
+        sh:message "cuisine: not in the known list (a typo, or a new cuisine to add?)" ] ;
+
+    sh:property [
+        sh:path rec:created ;
+        sh:maxCount 1 ;
+        sh:datatype xsd:date ;
+        sh:message "created: at most one, as xsd:date" ] ;
+
+    sh:property [
+        sh:path rec:created ;
+        sh:minCount 1 ;
+        sh:severity sh:Info ;
+        sh:message "created: no creation date" ] ;
+
+    sh:property [
+        sh:path rec:description ;
+        sh:minCount 1 ;
+        sh:severity sh:Warning ;
+        sh:message "description: missing" ] ;
+
+    sh:property [
+        sh:path rec:hasIngredient ;
+        sh:minCount 1 ;
+        sh:class rec:Ingredient ;
+        sh:message "hasIngredient: at least one, and each must be a known rec:Ingredient" ] ;
+
+    sh:property [
+        sh:path rec:hasIngredientLine ;
+        sh:minCount 1 ;
+        sh:node rec:IngredientLineShape ;
+        sh:message "hasIngredientLine: at least one, and each must be a valid ingredient line" ] ;
+
+    # A rule no single property can express: the two ingredient lists must agree.
+    sh:sparql [
+        a sh:SPARQLConstraint ;
+        sh:message "an ingredient line uses an ingredient that is missing from hasIngredient" ;
+        sh:select """
+            PREFIX rec: <http://example.org/recipes#>
+            SELECT $this ?value
+            WHERE {
+              $this rec:hasIngredientLine/rec:ingredient ?value .
+              FILTER NOT EXISTS { $this rec:hasIngredient ?value }
+            }""" ] .
+
+# Checked through RecipeShape (sh:node), so problems are reported on the recipe.
+rec:IngredientLineShape a sh:NodeShape ;
+    rdfs:label "Ingredient line" ;
+    sh:property [
+        sh:path rec:ingredient ;
+        sh:minCount 1 ; sh:maxCount 1 ;
+        sh:class rec:Ingredient ;
+        sh:message "ingredient line: exactly one known ingredient" ] ;
+    sh:property [
+        sh:path rec:quantity ;
+        sh:minCount 1 ; sh:maxCount 1 ;
+        sh:datatype xsd:decimal ;
+        sh:minExclusive 0 ;
+        sh:message "ingredient line: exactly one quantity, a positive decimal" ] ;
+    sh:property [
+        sh:path rec:unit ;
+        sh:minCount 1 ; sh:maxCount 1 ;
+        sh:in ( "g" "ml" "piece" "clove" "pinch" "tsp" "leaf" "stalk" ) ;
+        sh:message "ingredient line: exactly one unit from the list" ] .
+
+#################################################################
+# Ingredients
+#################################################################
+
+rec:IngredientShape a sh:NodeShape ;
+    rdfs:label "Ingredient" ;
+    sh:targetClass rec:Ingredient ;
+    sh:property [
+        sh:path rec:ingredientId ;
+        sh:minCount 1 ; sh:maxCount 1 ;
+        sh:pattern "^I[0-9]{3}$" ;
+        sh:message "ingredientId: exactly one, like I042" ] ;
+    sh:property [
+        sh:path rec:name ;
+        sh:minCount 1 ; sh:maxCount 1 ;
+        sh:message "name: exactly one" ] ;
+    sh:property [
+        sh:path rec:inCategory ;
+        sh:minCount 1 ; sh:maxCount 1 ;
+        sh:class rec:Category ;
+        sh:message "inCategory: exactly one known category" ] ;
+    sh:property [
+        sh:path rec:kcalPer100g ;
+        sh:minCount 1 ; sh:maxCount 1 ;
+        sh:datatype xsd:decimal ;
+        sh:minInclusive 0 ; sh:maxInclusive 900 ;
+        sh:message "kcalPer100g: exactly one decimal, 0-900" ] ;
+    sh:property [
+        sh:path rec:proteinPer100g ;
+        sh:minCount 1 ; sh:maxCount 1 ;
+        sh:datatype xsd:decimal ;
+        sh:minInclusive 0 ; sh:maxInclusive 100 ;
+        sh:message "proteinPer100g: exactly one decimal, 0-100" ] ;
+    sh:property [
+        sh:path rec:hasAllergen ;
+        sh:class rec:Allergen ;
+        sh:message "hasAllergen: must be a known rec:Allergen" ] .
+
+#################################################################
+# Ratings
+#################################################################
+
+rec:RatingShape a sh:NodeShape ;
+    rdfs:label "Rating" ;
+    sh:targetClass rec:Rating ;
+    sh:property [ sh:path rec:score ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:integer ;
+                  sh:minInclusive 1 ; sh:maxInclusive 5 ; sh:message "score: exactly one, 1-5" ] ;
+    sh:property [ sh:path rec:byUser ; sh:minCount 1 ; sh:maxCount 1 ; sh:message "byUser: exactly one" ] ;
+    sh:property [ sh:path rec:ofRecipe ; sh:minCount 1 ; sh:maxCount 1 ; sh:message "ofRecipe: exactly one" ] ;
+    sh:property [ sh:path rec:ratedOn ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:date ;
+                  sh:message "ratedOn: exactly one xsd:date" ] .

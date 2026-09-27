@@ -1,0 +1,12 @@
+# Every prerequisite of a topic, at any depth, marked direct (listed on the topic) or indirect.
+# Parameters: ?topic (IRI, e.g. topic:regression)
+PREFIX edu: <http://example.org/edu#>
+
+SELECT DISTINCT ?id ?name ?level ?direct
+WHERE {
+  ?topic edu:requires+ ?p .
+  ?p edu:name ?name ; edu:level ?level .
+  BIND(EXISTS { ?topic edu:requires ?p } AS ?direct)
+  BIND(STRAFTER(STR(?p), "/topic/") AS ?id)
+}
+ORDER BY DESC(?direct) DESC(?level) ?name

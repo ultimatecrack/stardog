@@ -1,0 +1,12 @@
+# Average score per topic, with its level and number of prerequisites (direct and indirect).
+# Parameters: none
+PREFIX edu: <http://example.org/edu#>
+
+SELECT ?topic ?level ?prerequisites (COUNT(?score) AS ?assessments) (ROUND(AVG(?score)) AS ?avg_score)
+WHERE {
+  ?t a edu:Topic ; edu:name ?topic ; edu:level ?level .
+  { SELECT ?t (COUNT(DISTINCT ?p) AS ?prerequisites) WHERE { ?t a edu:Topic OPTIONAL { ?t edu:requires+ ?p } } GROUP BY ?t }
+  OPTIONAL { ?a edu:topic ?t ; edu:score ?score }
+}
+GROUP BY ?topic ?level ?prerequisites
+ORDER BY ?avg_score

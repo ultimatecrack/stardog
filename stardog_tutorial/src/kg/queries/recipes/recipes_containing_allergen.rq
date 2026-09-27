@@ -1,0 +1,11 @@
+# Recipes that contain an allergen, found by the allergen's name. Needs reasoning (rec:containsAllergen).
+# Parameters: ?allergen_name (text, e.g. "Peanuts")
+PREFIX rec: <http://example.org/recipes#>
+
+SELECT DISTINCT ?name
+WHERE {
+  ?recipe rec:containsAllergen ?a ; rec:name ?name .
+  ?a rec:name ?allergen_name .
+  FILTER(lang(?name) = "en")
+}
+ORDER BY ?name

@@ -1,0 +1,29 @@
+# The best-rated recipe of each cuisine (needs the recipes and ratings graphs).
+# Parameters: none
+PREFIX rec: <http://example.org/recipes#>
+
+SELECT ?cuisine ?recipe_name ?avg_score ?ratings
+WHERE {
+  # 1. average score per recipe
+  {
+    SELECT ?recipe (AVG(?score) AS ?avg) (COUNT(?rating) AS ?ratings)
+    WHERE { ?rating rec:ofRecipe ?recipe ; rec:score ?score }
+    GROUP BY ?recipe
+  }
+  ?recipe rec:cuisine ?cuisine ; rec:name ?recipe_name .
+  FILTER(lang(?recipe_name) = "en")
+  # 2. the best average within each cuisine
+  {
+    SELECT ?cuisine (MAX(?recipe_avg) AS ?best)
+    WHERE {
+      { SELECT ?r (AVG(?s) AS ?recipe_avg) WHERE { ?x rec:ofRecipe ?r ; rec:score ?s } GROUP BY ?r }
+      ?r rec:cuisine ?cuisine .
+    }
+    GROUP BY ?cuisine
+  }
+  # 3. keep the recipe whose average is the best. Two separately computed averages can
+  #    differ in the last digits, so compare with a tolerance instead of "="
+  FILTER(ABS(?avg - ?best) < 0.000001)
+  BIND(ROUND(?avg * 100) / 100 AS ?avg_score)
+}
+ORDER BY DESC(?avg_score)

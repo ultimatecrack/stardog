@@ -1,0 +1,607 @@
+# Supply chain network (Chapters 12 and 15b): 30 facilities with city coordinates, 43 routes.
+# Geometries use GeoSPARQL: WKT points are written POINT(longitude latitude).
+@prefix geo: <http://www.opengis.net/ont/geosparql#> .
+@prefix sc: <http://example.org/supplychain#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+sc:route_DC1_DC2 a sc:Route ;
+    sc:destination sc:DC2 ;
+    sc:leadTimeDays 1 ;
+    sc:mode "Truck" ;
+    sc:origin sc:DC1 .
+
+sc:route_DC1_R1 a sc:Route ;
+    sc:destination sc:R1 ;
+    sc:leadTimeDays 2 ;
+    sc:mode "Truck" ;
+    sc:origin sc:DC1 .
+
+sc:route_DC1_R2 a sc:Route ;
+    sc:destination sc:R2 ;
+    sc:leadTimeDays 2 ;
+    sc:mode "Truck" ;
+    sc:origin sc:DC1 .
+
+sc:route_DC1_R3 a sc:Route ;
+    sc:destination sc:R3 ;
+    sc:leadTimeDays 1 ;
+    sc:mode "Truck" ;
+    sc:origin sc:DC1 .
+
+sc:route_DC2_R1 a sc:Route ;
+    sc:destination sc:R1 ;
+    sc:leadTimeDays 1 ;
+    sc:mode "Truck" ;
+    sc:origin sc:DC2 .
+
+sc:route_DC2_R2 a sc:Route ;
+    sc:destination sc:R2 ;
+    sc:leadTimeDays 2 ;
+    sc:mode "Truck" ;
+    sc:origin sc:DC2 .
+
+sc:route_DC3_DC4 a sc:Route ;
+    sc:destination sc:DC4 ;
+    sc:leadTimeDays 3 ;
+    sc:mode "Rail" ;
+    sc:origin sc:DC3 .
+
+sc:route_DC3_DC5 a sc:Route ;
+    sc:destination sc:DC5 ;
+    sc:leadTimeDays 2 ;
+    sc:mode "Truck" ;
+    sc:origin sc:DC3 .
+
+sc:route_DC3_R4 a sc:Route ;
+    sc:destination sc:R4 ;
+    sc:leadTimeDays 1 ;
+    sc:mode "Truck" ;
+    sc:origin sc:DC3 .
+
+sc:route_DC3_R5 a sc:Route ;
+    sc:destination sc:R5 ;
+    sc:leadTimeDays 1 ;
+    sc:mode "Truck" ;
+    sc:origin sc:DC3 .
+
+sc:route_DC3_R6 a sc:Route ;
+    sc:destination sc:R6 ;
+    sc:leadTimeDays 4 ;
+    sc:mode "Truck" ;
+    sc:origin sc:DC3 .
+
+sc:route_DC4_DC5 a sc:Route ;
+    sc:destination sc:DC5 ;
+    sc:leadTimeDays 2 ;
+    sc:mode "Truck" ;
+    sc:origin sc:DC4 .
+
+sc:route_DC4_R6 a sc:Route ;
+    sc:destination sc:R6 ;
+    sc:leadTimeDays 1 ;
+    sc:mode "Truck" ;
+    sc:origin sc:DC4 .
+
+sc:route_DC4_R7 a sc:Route ;
+    sc:destination sc:R7 ;
+    sc:leadTimeDays 2 ;
+    sc:mode "Truck" ;
+    sc:origin sc:DC4 .
+
+sc:route_DC4_RC1 a sc:Route ;
+    sc:destination sc:RC1 ;
+    sc:leadTimeDays 2 ;
+    sc:mode "Truck" ;
+    sc:origin sc:DC4 .
+
+sc:route_DC5_R8 a sc:Route ;
+    sc:destination sc:R8 ;
+    sc:leadTimeDays 1 ;
+    sc:mode "Truck" ;
+    sc:origin sc:DC5 .
+
+sc:route_DC6_R10 a sc:Route ;
+    sc:destination sc:R10 ;
+    sc:leadTimeDays 3 ;
+    sc:mode "Truck" ;
+    sc:origin sc:DC6 .
+
+sc:route_DC6_R9 a sc:Route ;
+    sc:destination sc:R9 ;
+    sc:leadTimeDays 1 ;
+    sc:mode "Truck" ;
+    sc:origin sc:DC6 .
+
+sc:route_F1_P1 a sc:Route ;
+    sc:destination sc:P1 ;
+    sc:leadTimeDays 2 ;
+    sc:mode "Truck" ;
+    sc:origin sc:F1 .
+
+sc:route_F1_P2 a sc:Route ;
+    sc:destination sc:P2 ;
+    sc:leadTimeDays 5 ;
+    sc:mode "Sea" ;
+    sc:origin sc:F1 .
+
+sc:route_F2_P3 a sc:Route ;
+    sc:destination sc:P3 ;
+    sc:leadTimeDays 1 ;
+    sc:mode "Truck" ;
+    sc:origin sc:F2 .
+
+sc:route_F3_DC6 a sc:Route ;
+    sc:destination sc:DC6 ;
+    sc:leadTimeDays 1 ;
+    sc:mode "Truck" ;
+    sc:origin sc:F3 .
+
+sc:route_F3_R9 a sc:Route ;
+    sc:destination sc:R9 ;
+    sc:leadTimeDays 2 ;
+    sc:mode "Truck" ;
+    sc:origin sc:F3 .
+
+sc:route_P1_P2 a sc:Route ;
+    sc:destination sc:P2 ;
+    sc:leadTimeDays 5 ;
+    sc:mode "Sea" ;
+    sc:origin sc:P1 .
+
+sc:route_P1_P4 a sc:Route ;
+    sc:destination sc:P4 ;
+    sc:leadTimeDays 30 ;
+    sc:mode "Sea" ;
+    sc:origin sc:P1 .
+
+sc:route_P1_P5 a sc:Route ;
+    sc:destination sc:P5 ;
+    sc:leadTimeDays 18 ;
+    sc:mode "Sea" ;
+    sc:origin sc:P1 .
+
+sc:route_P2_P4 a sc:Route ;
+    sc:destination sc:P4 ;
+    sc:leadTimeDays 25 ;
+    sc:mode "Sea" ;
+    sc:origin sc:P2 .
+
+sc:route_P2_P5 a sc:Route ;
+    sc:destination sc:P5 ;
+    sc:leadTimeDays 20 ;
+    sc:mode "Sea" ;
+    sc:origin sc:P2 .
+
+sc:route_P3_P4 a sc:Route ;
+    sc:destination sc:P4 ;
+    sc:leadTimeDays 22 ;
+    sc:mode "Sea" ;
+    sc:origin sc:P3 .
+
+sc:route_P3_P5 a sc:Route ;
+    sc:destination sc:P5 ;
+    sc:leadTimeDays 28 ;
+    sc:mode "Sea" ;
+    sc:origin sc:P3 .
+
+sc:route_P4_DC1 a sc:Route ;
+    sc:destination sc:DC1 ;
+    sc:leadTimeDays 1 ;
+    sc:mode "Truck" ;
+    sc:origin sc:P4 .
+
+sc:route_P4_DC2 a sc:Route ;
+    sc:destination sc:DC2 ;
+    sc:leadTimeDays 2 ;
+    sc:mode "Rail" ;
+    sc:origin sc:P4 .
+
+sc:route_P5_DC3 a sc:Route ;
+    sc:destination sc:DC3 ;
+    sc:leadTimeDays 1 ;
+    sc:mode "Truck" ;
+    sc:origin sc:P5 .
+
+sc:route_R6_RC1 a sc:Route ;
+    sc:destination sc:RC1 ;
+    sc:leadTimeDays 2 ;
+    sc:mode "Truck" ;
+    sc:origin sc:R6 .
+
+sc:route_R7_RC1 a sc:Route ;
+    sc:destination sc:RC1 ;
+    sc:leadTimeDays 3 ;
+    sc:mode "Truck" ;
+    sc:origin sc:R7 .
+
+sc:route_RC1_F2 a sc:Route ;
+    sc:destination sc:F2 ;
+    sc:leadTimeDays 30 ;
+    sc:mode "Sea" ;
+    sc:origin sc:RC1 .
+
+sc:route_S1_F1 a sc:Route ;
+    sc:destination sc:F1 ;
+    sc:leadTimeDays 1 ;
+    sc:mode "Truck" ;
+    sc:origin sc:S1 .
+
+sc:route_S1_F2 a sc:Route ;
+    sc:destination sc:F2 ;
+    sc:leadTimeDays 3 ;
+    sc:mode "Air" ;
+    sc:origin sc:S1 .
+
+sc:route_S2_F1 a sc:Route ;
+    sc:destination sc:F1 ;
+    sc:leadTimeDays 2 ;
+    sc:mode "Truck" ;
+    sc:origin sc:S2 .
+
+sc:route_S3_F2 a sc:Route ;
+    sc:destination sc:F2 ;
+    sc:leadTimeDays 2 ;
+    sc:mode "Truck" ;
+    sc:origin sc:S3 .
+
+sc:route_S4_F1 a sc:Route ;
+    sc:destination sc:F1 ;
+    sc:leadTimeDays 4 ;
+    sc:mode "Sea" ;
+    sc:origin sc:S4 .
+
+sc:route_S4_F2 a sc:Route ;
+    sc:destination sc:F2 ;
+    sc:leadTimeDays 2 ;
+    sc:mode "Air" ;
+    sc:origin sc:S4 .
+
+sc:route_S5_F3 a sc:Route ;
+    sc:destination sc:F3 ;
+    sc:leadTimeDays 2 ;
+    sc:mode "Truck" ;
+    sc:origin sc:S5 .
+
+sc:DC1-location a geo:Geometry ;
+    geo:asWKT "POINT(4.4777 51.9244)"^^geo:wktLiteral .
+
+sc:DC2-location a geo:Geometry ;
+    geo:asWKT "POINT(8.6821 50.1109)"^^geo:wktLiteral .
+
+sc:DC3-location a geo:Geometry ;
+    geo:asWKT "POINT(-118.2437 34.0522)"^^geo:wktLiteral .
+
+sc:DC4-location a geo:Geometry ;
+    geo:asWKT "POINT(-87.6298 41.8781)"^^geo:wktLiteral .
+
+sc:DC5-location a geo:Geometry ;
+    geo:asWKT "POINT(-96.797 32.7767)"^^geo:wktLiteral .
+
+sc:DC6-location a geo:Geometry ;
+    geo:asWKT "POINT(-46.6333 -23.5505)"^^geo:wktLiteral .
+
+sc:F1-location a geo:Geometry ;
+    geo:asWKT "POINT(114.0579 22.5431)"^^geo:wktLiteral .
+
+sc:F2-location a geo:Geometry ;
+    geo:asWKT "POINT(73.8567 18.5204)"^^geo:wktLiteral .
+
+sc:F3-location a geo:Geometry ;
+    geo:asWKT "POINT(-46.3322 -23.9608)"^^geo:wktLiteral .
+
+sc:P1-location a geo:Geometry ;
+    geo:asWKT "POINT(121.4737 31.2304)"^^geo:wktLiteral .
+
+sc:P2-location a geo:Geometry ;
+    geo:asWKT "POINT(103.8198 1.3521)"^^geo:wktLiteral .
+
+sc:P3-location a geo:Geometry ;
+    geo:asWKT "POINT(72.8777 19.076)"^^geo:wktLiteral .
+
+sc:P4-location a geo:Geometry ;
+    geo:asWKT "POINT(4.4777 51.9244)"^^geo:wktLiteral .
+
+sc:P5-location a geo:Geometry ;
+    geo:asWKT "POINT(-118.2437 34.0522)"^^geo:wktLiteral .
+
+sc:R1-location a geo:Geometry ;
+    geo:asWKT "POINT(13.405 52.52)"^^geo:wktLiteral .
+
+sc:R10-location a geo:Geometry ;
+    geo:asWKT "POINT(-58.3816 -34.6037)"^^geo:wktLiteral .
+
+sc:R2-location a geo:Geometry ;
+    geo:asWKT "POINT(2.3522 48.8566)"^^geo:wktLiteral .
+
+sc:R3-location a geo:Geometry ;
+    geo:asWKT "POINT(4.9041 52.3676)"^^geo:wktLiteral .
+
+sc:R4-location a geo:Geometry ;
+    geo:asWKT "POINT(-118.2437 34.0522)"^^geo:wktLiteral .
+
+sc:R5-location a geo:Geometry ;
+    geo:asWKT "POINT(-122.4194 37.7749)"^^geo:wktLiteral .
+
+sc:R6-location a geo:Geometry ;
+    geo:asWKT "POINT(-87.6298 41.8781)"^^geo:wktLiteral .
+
+sc:R7-location a geo:Geometry ;
+    geo:asWKT "POINT(-74.006 40.7128)"^^geo:wktLiteral .
+
+sc:R8-location a geo:Geometry ;
+    geo:asWKT "POINT(-95.3698 29.7604)"^^geo:wktLiteral .
+
+sc:R9-location a geo:Geometry ;
+    geo:asWKT "POINT(-43.1729 -22.9068)"^^geo:wktLiteral .
+
+sc:RC1-location a geo:Geometry ;
+    geo:asWKT "POINT(-90.049 35.1495)"^^geo:wktLiteral .
+
+sc:S1-location a geo:Geometry ;
+    geo:asWKT "POINT(114.0579 22.5431)"^^geo:wktLiteral .
+
+sc:S2 a sc:Supplier ;
+    sc:city "Shanghai" ;
+    sc:country "China" ;
+    sc:name "Shanghai Plastics Co" ;
+    sc:region "Asia" ;
+    sc:shipsTo sc:F1 ;
+    geo:hasGeometry sc:S2-location .
+
+sc:S2-location a geo:Geometry ;
+    geo:asWKT "POINT(121.4737 31.2304)"^^geo:wktLiteral .
+
+sc:S3 a sc:Supplier ;
+    sc:city "Bangalore" ;
+    sc:country "India" ;
+    sc:name "Bangalore Chip Works" ;
+    sc:region "Asia" ;
+    sc:shipsTo sc:F2 ;
+    geo:hasGeometry sc:S3-location .
+
+sc:S3-location a geo:Geometry ;
+    geo:asWKT "POINT(77.5946 12.9716)"^^geo:wktLiteral .
+
+sc:S4-location a geo:Geometry ;
+    geo:asWKT "POINT(121.5654 25.033)"^^geo:wktLiteral .
+
+sc:S5 a sc:Supplier ;
+    sc:city "Belo Horizonte" ;
+    sc:country "Brazil" ;
+    sc:name "Minas Gerais Coffee Farm" ;
+    sc:region "South America" ;
+    sc:shipsTo sc:F3 ;
+    geo:hasGeometry sc:S5-location .
+
+sc:S5-location a geo:Geometry ;
+    geo:asWKT "POINT(-43.9378 -19.9167)"^^geo:wktLiteral .
+
+sc:R10 a sc:RetailStore ;
+    sc:city "Buenos Aires" ;
+    sc:country "Argentina" ;
+    sc:name "Buenos Aires Store" ;
+    sc:region "South America" ;
+    geo:hasGeometry sc:R10-location .
+
+sc:R3 a sc:RetailStore ;
+    sc:city "Amsterdam" ;
+    sc:country "Netherlands" ;
+    sc:name "Amsterdam Store" ;
+    sc:region "Europe" ;
+    geo:hasGeometry sc:R3-location .
+
+sc:R4 a sc:RetailStore ;
+    sc:city "Los Angeles" ;
+    sc:country "USA" ;
+    sc:name "Los Angeles Store" ;
+    sc:region "North America" ;
+    geo:hasGeometry sc:R4-location .
+
+sc:R5 a sc:RetailStore ;
+    sc:city "San Francisco" ;
+    sc:country "USA" ;
+    sc:name "San Francisco Store" ;
+    sc:region "North America" ;
+    geo:hasGeometry sc:R5-location .
+
+sc:R8 a sc:RetailStore ;
+    sc:city "Houston" ;
+    sc:country "USA" ;
+    sc:name "Houston Store" ;
+    sc:region "North America" ;
+    geo:hasGeometry sc:R8-location .
+
+sc:S1 a sc:Supplier ;
+    sc:city "Shenzhen" ;
+    sc:country "China" ;
+    sc:name "Shenzhen Electronics Components" ;
+    sc:region "Asia" ;
+    sc:shipsTo sc:F1,
+        sc:F2 ;
+    geo:hasGeometry sc:S1-location .
+
+sc:S4 a sc:Supplier ;
+    sc:city "Taipei" ;
+    sc:country "Taiwan" ;
+    sc:name "Taipei Display Panels" ;
+    sc:region "Asia" ;
+    sc:shipsTo sc:F1,
+        sc:F2 ;
+    geo:hasGeometry sc:S4-location .
+
+sc:R7 a sc:RetailStore ;
+    sc:city "New York" ;
+    sc:country "USA" ;
+    sc:name "New York Store" ;
+    sc:region "North America" ;
+    sc:shipsTo sc:RC1 ;
+    geo:hasGeometry sc:R7-location .
+
+sc:DC6 a sc:DistributionCenter ;
+    sc:city "Sao Paulo" ;
+    sc:country "Brazil" ;
+    sc:name "Sao Paulo Distribution Center" ;
+    sc:region "South America" ;
+    sc:shipsTo sc:R10,
+        sc:R9 ;
+    geo:hasGeometry sc:DC6-location .
+
+sc:F3 a sc:Factory ;
+    sc:city "Santos" ;
+    sc:country "Brazil" ;
+    sc:name "Santos Coffee Roastery" ;
+    sc:region "South America" ;
+    sc:shipsTo sc:DC6,
+        sc:R9 ;
+    geo:hasGeometry sc:F3-location .
+
+sc:P3 a sc:Port ;
+    sc:city "Mumbai" ;
+    sc:country "India" ;
+    sc:name "Port of Mumbai" ;
+    sc:region "Asia" ;
+    sc:shipsTo sc:P4,
+        sc:P5 ;
+    geo:hasGeometry sc:P3-location .
+
+sc:R1 a sc:RetailStore ;
+    sc:city "Berlin" ;
+    sc:country "Germany" ;
+    sc:name "Berlin Store" ;
+    sc:region "Europe" ;
+    geo:hasGeometry sc:R1-location .
+
+sc:R2 a sc:RetailStore ;
+    sc:city "Paris" ;
+    sc:country "France" ;
+    sc:name "Paris Store" ;
+    sc:region "Europe" ;
+    geo:hasGeometry sc:R2-location .
+
+sc:R9 a sc:RetailStore ;
+    sc:city "Rio de Janeiro" ;
+    sc:country "Brazil" ;
+    sc:name "Rio de Janeiro Store" ;
+    sc:region "South America" ;
+    geo:hasGeometry sc:R9-location .
+
+sc:DC5 a sc:DistributionCenter ;
+    sc:city "Dallas" ;
+    sc:country "USA" ;
+    sc:name "Dallas Distribution Center" ;
+    sc:region "North America" ;
+    sc:shipsTo sc:R8 ;
+    geo:hasGeometry sc:DC5-location .
+
+sc:P1 a sc:Port ;
+    sc:city "Shanghai" ;
+    sc:country "China" ;
+    sc:name "Port of Shanghai" ;
+    sc:region "Asia" ;
+    sc:shipsTo sc:P2,
+        sc:P4,
+        sc:P5 ;
+    geo:hasGeometry sc:P1-location .
+
+sc:R6 a sc:RetailStore ;
+    sc:city "Chicago" ;
+    sc:country "USA" ;
+    sc:name "Chicago Store" ;
+    sc:region "North America" ;
+    sc:shipsTo sc:RC1 ;
+    geo:hasGeometry sc:R6-location .
+
+sc:DC1 a sc:DistributionCenter ;
+    sc:city "Rotterdam" ;
+    sc:country "Netherlands" ;
+    sc:name "Rotterdam Distribution Center" ;
+    sc:region "Europe" ;
+    sc:shipsTo sc:DC2,
+        sc:R1,
+        sc:R2,
+        sc:R3 ;
+    geo:hasGeometry sc:DC1-location .
+
+sc:DC2 a sc:DistributionCenter ;
+    sc:city "Frankfurt" ;
+    sc:country "Germany" ;
+    sc:name "Frankfurt Distribution Center" ;
+    sc:region "Europe" ;
+    sc:shipsTo sc:R1,
+        sc:R2 ;
+    geo:hasGeometry sc:DC2-location .
+
+sc:DC4 a sc:DistributionCenter ;
+    sc:city "Chicago" ;
+    sc:country "USA" ;
+    sc:name "Chicago Distribution Center" ;
+    sc:region "North America" ;
+    sc:shipsTo sc:DC5,
+        sc:R6,
+        sc:R7,
+        sc:RC1 ;
+    geo:hasGeometry sc:DC4-location .
+
+sc:P2 a sc:Port ;
+    sc:city "Singapore" ;
+    sc:country "Singapore" ;
+    sc:name "Port of Singapore" ;
+    sc:region "Asia" ;
+    sc:shipsTo sc:P4,
+        sc:P5 ;
+    geo:hasGeometry sc:P2-location .
+
+sc:DC3 a sc:DistributionCenter ;
+    sc:city "Los Angeles" ;
+    sc:country "USA" ;
+    sc:name "Los Angeles Distribution Center" ;
+    sc:region "North America" ;
+    sc:shipsTo sc:DC4,
+        sc:DC5,
+        sc:R4,
+        sc:R5,
+        sc:R6 ;
+    geo:hasGeometry sc:DC3-location .
+
+sc:P5 a sc:Port ;
+    sc:city "Los Angeles" ;
+    sc:country "USA" ;
+    sc:name "Port of Los Angeles" ;
+    sc:region "North America" ;
+    sc:shipsTo sc:DC3 ;
+    geo:hasGeometry sc:P5-location .
+
+sc:RC1 a sc:ReturnsCenter ;
+    sc:city "Memphis" ;
+    sc:country "USA" ;
+    sc:name "Memphis Returns Center" ;
+    sc:region "North America" ;
+    sc:shipsTo sc:F2 ;
+    geo:hasGeometry sc:RC1-location .
+
+sc:F1 a sc:Factory ;
+    sc:city "Shenzhen" ;
+    sc:country "China" ;
+    sc:name "Shenzhen Assembly Plant" ;
+    sc:region "Asia" ;
+    sc:shipsTo sc:P1,
+        sc:P2 ;
+    geo:hasGeometry sc:F1-location .
+
+sc:P4 a sc:Port ;
+    sc:city "Rotterdam" ;
+    sc:country "Netherlands" ;
+    sc:name "Port of Rotterdam" ;
+    sc:region "Europe" ;
+    sc:shipsTo sc:DC1,
+        sc:DC2 ;
+    geo:hasGeometry sc:P4-location .
+
+sc:F2 a sc:Factory ;
+    sc:city "Pune" ;
+    sc:country "India" ;
+    sc:name "Pune Assembly Plant" ;
+    sc:region "Asia" ;
+    sc:shipsTo sc:P3 ;
+    geo:hasGeometry sc:F2-location .
+

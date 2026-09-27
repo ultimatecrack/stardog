@@ -1,0 +1,41 @@
+student_id,first_name,last_name,email,city,year,enrolled_on
+S001,Tom,Okafor,tom.s001@student.example.edu,Lagos,1,2023-09-01
+S002,Hana,Novak,hana.s002@student.example.edu,Lagos,1,2025-08-31
+S003,Dara,Jensen,dara.s003@student.example.edu,Berlin,1,2023-09-01
+S004,Dara,Mueller,dara.s004@student.example.edu,Bengaluru,2,2024-08-31
+S005,Nina,Sharma,nina.s005@student.example.edu,Lagos,3,2023-09-01
+S006,Dara,Mensah,dara.s006@student.example.edu,Lagos,2,2023-09-01
+S007,Nina,Tanaka,nina.s007@student.example.edu,Sao Paulo,3,2024-08-31
+S008,Gabriel,Singh,gabriel.s008@student.example.edu,Toronto,1,2024-08-31
+S009,Farah,Ivanova,farah.s009@student.example.edu,Toronto,1,2024-08-31
+S010,Hugo,Tanaka,hugo.s010@student.example.edu,Lagos,1,2025-08-31
+S011,Lena,Silva,lena.s011@student.example.edu,Lagos,3,2025-08-31
+S012,Nina,Rossi,nina.s012@student.example.edu,Toronto,2,2025-08-31
+S013,Priya,Singh,priya.s013@student.example.edu,Pune,3,2025-08-31
+S014,Gita,Mensah,gita.s014@student.example.edu,Pune,2,2023-09-01
+S015,Emil,Silva,emil.s015@student.example.edu,Sao Paulo,1,2023-09-01
+S016,Ivan,Singh,ivan.s016@student.example.edu,Berlin,2,2023-09-01
+S017,Gita,Tanaka,gita.s017@student.example.edu,Bengaluru,3,2023-09-01
+S018,Chen,Silva,chen.s018@student.example.edu,Lagos,1,2023-09-01
+S019,Freya,Singh,freya.s019@student.example.edu,Bengaluru,1,2023-09-01
+S020,Ananya,Singh,ananya.s020@student.example.edu,Sao Paulo,3,2023-09-01
+S021,Lena,Sharma,lena.s021@student.example.edu,Toronto,2,2024-08-31
+S022,Dara,Mueller,dara.s022@student.example.edu,Sao Paulo,1,2023-09-01
+S023,Aarav,Sharma,aarav.s023@student.example.edu,Sao Paulo,2,2024-08-31
+S024,Mateo,Mensah,mateo.s024@student.example.edu,Pune,2,2023-09-01
+S025,Elena,Rossi,elena.s025@student.example.edu,Berlin,1,2023-09-01
+S026,Tom,Silva,tom.s026@student.example.edu,Berlin,1,2025-08-31
+S027,Kofi,Sharma,kofi.s027@student.example.edu,Toronto,2,2025-08-31
+S028,Isla,Garcia,isla.s028@student.example.edu,Berlin,2,2024-08-31
+S029,Wen,Ivanova,wen.s029@student.example.edu,Pune,2,2025-08-31
+S030,Tom,Costa,tom.s030@student.example.edu,Toronto,2,2023-09-01
+S031,Wen,Kim,wen.s031@student.example.edu,Lagos,2,2023-09-01
+S032,Wen,Ivanova,wen.s032@student.example.edu,Pune,1,2024-08-31
+S033,Yusuf,Jensen,yusuf.s033@student.example.edu,Bengaluru,1,2023-09-01
+S034,Dara,Rossi,dara.s034@student.example.edu,Lagos,2,2023-09-01
+S035,Jia,Nguyen,jia.s035@student.example.edu,Bengaluru,2,2025-08-31
+S036,Chen,Tanaka,chen.s036@student.example.edu,Sao Paulo,3,2025-08-31
+S037,Priya,Novak,priya.s037@student.example.edu,Toronto,3,2025-08-31
+S038,Emil,Rossi,emil.s038@student.example.edu,Pune,1,2023-09-01
+S039,Ananya,Singh,ananya.s039@student.example.edu,Pune,1,2023-09-01
+S040,Kofi,Ivanova,kofi.s040@student.example.edu,Berlin,1,2024-08-31

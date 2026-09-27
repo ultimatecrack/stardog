@@ -1,0 +1,180 @@
+{
+  "74acd9ee896e096a": {
+    "teaches": [
+      "classification evaluation",
+      "confusion matrix",
+      "precision recall f1 score",
+      "roc curve",
+      "cross validation"
+    ],
+    "requires": [
+      "logistic regression",
+      "decision trees",
+      "confusion matrix",
+      "cross validation"
+    ],
+    "mentions": [
+      "overfitting",
+      "learning curves"
+    ]
+  },
+  "f124d42d2435cb6c": {
+    "teaches": [
+      "linear regression"
+    ],
+    "requires": [
+      "statistics",
+      "linear algebra",
+      "pandas"
+    ],
+    "mentions": [
+      "mean",
+      "variance",
+      "correlation",
+      "matrix inversion",
+      "gradient descent",
+      "r-squared"
+    ]
+  },
+  "f96723f824e32e4f": {
+    "teaches": [
+      "pandas",
+      "dataframes"
+    ],
+    "requires": [
+      "python lists",
+      "python dictionaries",
+      "numpy arrays"
+    ],
+    "mentions": [
+      "pd.read_csv",
+      "head()",
+      "groupby",
+      "mean",
+      "count",
+      "isna()",
+      "fillna()",
+      "dropna()",
+      "sql join"
+    ]
+  },
+  "cdd9abe29b313986": {
+    "teaches": [
+      "plotting with matplotlib",
+      "data visualization"
+    ],
+    "requires": [
+      "pandas dataframes",
+      "data filtering"
+    ],
+    "mentions": [
+      "line charts",
+      "bar charts",
+      "histograms",
+      "scatter plots",
+      "subplots",
+      "color theory"
+    ]
+  },
+  "ecb2d2b7e91ddf85": {
+    "teaches": [
+      "probability",
+      "distributions",
+      "statistics"
+    ],
+    "requires": [
+      "fractions",
+      "basic algebra",
+      "independent events",
+      "conditional probability"
+    ],
+    "mentions": [
+      "bayes' theorem",
+      "random variables",
+      "expected value",
+      "variance",
+      "confidence intervals",
+      "hypothesis tests"
+    ]
+  },
+  "bb43097a7e5b6f85": {
+    "teaches": [
+      "sparql",
+      "sql joins",
+      "knowledge graphs"
+    ],
+    "requires": [
+      "sql",
+      "select",
+      "where",
+      "joins"
+    ],
+    "mentions": [
+      "rdf triples",
+      "iri",
+      "prefixes",
+      "property paths",
+      "recursive query"
+    ]
+  },
+  "choose:89cb4c1dc5484ee3": "Model evaluation",
+  "choose:8d7b505e4bebbd61": "Model evaluation",
+  "choose:0585d41a24643f98": "Model evaluation",
+  "choose:4a4c501920668866": "Model evaluation",
+  "choose:9e1a93a2963136fe": "Model evaluation",
+  "choose:bcd5e898f5591760": "Classification",
+  "choose:2d901949392b5fa7": "Classification",
+  "choose:076524badcf56642": "Model evaluation",
+  "choose:98da7fe095fd75d5": "Model evaluation",
+  "choose:ac747d225b30e2f8": "Statistics",
+  "choose:be5f2e70dc19764d": "Statistics",
+  "choose:a30204c33840b192": "Statistics",
+  "choose:f4718103870b9458": "Linear algebra",
+  "choose:a256da42c2f96089": "Calculus basics",
+  "choose:832ca8d576c4af89": "Linear regression; Model evaluation; Statistics",
+  "choose:903c0cc0e6adf008": "pandas",
+  "choose:56a260a83d7f471b": "Python basics",
+  "choose:741b2c1081a4bff8": "Python basics",
+  "choose:9d1752b2a521a7d4": "NumPy",
+  "choose:9d445e80573e0354": "pandas",
+  "choose:1edc119ec9a6be8e": "pandas",
+  "choose:b7dd93dfc91c6f85": "pandas",
+  "choose:02632b6e7b4494c1": "Statistics",
+  "choose:0d3807627cd9ade9": "pandas",
+  "choose:7b1fab0cf57545e5": "pandas",
+  "choose:c520d1c752a5b024": "pandas",
+  "choose:7524e78adc4ee3ad": "Data visualization",
+  "choose:4120ef2bf0beaaac": "pandas",
+  "choose:7fd246dd05608379": "pandas",
+  "choose:1c30c7216a35d4c2": "Data visualization",
+  "choose:63deca6d4e84d577": "Data visualization",
+  "choose:1349da3d5b2fb859": "Data visualization",
+  "choose:39d43dbd02f47eb6": "Data visualization",
+  "choose:43dcb9429aee73fd": "Data visualization",
+  "choose:47dcef09a54168eb": "Data visualization",
+  "choose:a102ab609ff606b9": "Probability",
+  "choose:96db5b83f4c725d1": "Statistics",
+  "choose:b5c7c145763a3775": "Algebra refresher",
+  "choose:6f8d99a845115d7d": "Probability",
+  "choose:29269eaad79b3a64": "Probability",
+  "choose:0f7c74dec0d89c72": "Probability",
+  "choose:5352a12738fcfe54": "Probability",
+  "choose:7846c3cee2c8f3a6": "Probability",
+  "choose:f5cc46c78cb4ff0b": "Statistics",
+  "choose:80b2472b5cfb7aa3": "Statistics",
+  "choose:75e8fb3aeed216e0": "Classification",
+  "choose:ce65a64475d4a0c8": "Data visualization",
+  "choose:9d132f06e71cc8be": "RDF and SPARQL",
+  "choose:e807cadee47953d1": null,
+  "choose:8f089909e69f9ecf": null,
+  "choose:2064d14a63d786dd": "Knowledge graphs",
+  "choose:dec2d366e55a2046": "SQL joins",
+  "choose:6a034718bab2651b": "Linear regression",
+  "choose:926a4932adfddef1": "Statistics",
+  "choose:76ba889819174e81": "Linear algebra",
+  "choose:5b67004266a05a76": "Data structures",
+  "choose:d57af91b580c05db": "SQL basics",
+  "choose:859a47e8196891ea": "SQL joins",
+  "choose:df539ab88913b3dc": "Probability",
+  "choose:d3b8d53b2b924044": "Data visualization"
+}

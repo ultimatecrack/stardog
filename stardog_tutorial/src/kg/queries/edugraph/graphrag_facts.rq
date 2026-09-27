@@ -1,0 +1,25 @@
+# Facts about one topic or document, as readable (subject, property, value) rows for an LLM.
+# Parameters: ?entity (IRI of a topic or document)
+PREFIX edu: <http://example.org/edu#>
+
+SELECT ?s ?p ?o
+WHERE {
+  ?entity edu:name|edu:title ?s .
+  {
+    VALUES (?prop ?forward) {
+      (edu:requires "requires (directly)") (edu:dependsOn "depends on (directly or indirectly)")
+      (edu:covers "covers topic") (edu:teaches "teaches") (edu:requiresKnowledgeOf "requires knowledge of")
+      (edu:mentions "mentions") }
+    ?entity ?prop ?x . ?x edu:name|edu:title ?o . BIND(?forward AS ?p)
+  } UNION {
+    VALUES (?prop ?backward) {
+      (edu:requires "is a direct prerequisite of") (edu:covers "is covered by course")
+      (edu:teaches "is taught by lesson") (edu:requiresKnowledgeOf "is needed to read lesson")
+      (edu:mentions "is mentioned in lesson") }
+    ?x ?prop ?entity . ?x edu:name|edu:title ?o . BIND(?backward AS ?p)
+  } UNION {
+    ?entity edu:level ?level . BIND("has level (1 beginner - 3 advanced)" AS ?p) BIND(STR(?level) AS ?o)
+  } UNION {
+    ?entity edu:subject ?o . BIND("belongs to subject" AS ?p)
+  }
+}

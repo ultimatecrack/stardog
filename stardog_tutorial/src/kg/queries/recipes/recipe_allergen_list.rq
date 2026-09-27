@@ -1,0 +1,9 @@
+# Each recipe with each allergen it contains (via the containsAllergen chain). Needs reasoning.
+# Parameters: none (run with reasoning=True and the recipes model)
+PREFIX rec: <http://example.org/recipes#>
+
+SELECT ?recipe ?allergen
+WHERE {
+  ?recipe a rec:Recipe ; rec:containsAllergen/rec:name ?allergen .
+}
+ORDER BY ?recipe ?allergen

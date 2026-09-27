@@ -1,0 +1,17 @@
+# Weak prerequisites: a student scored below ?threshold on a topic that a topic in one of their courses
+# depends on (at any depth). Bind ?student to one student IRI, or leave it unbound for everyone.
+# Parameters: ?threshold (integer, e.g. 50), optional ?student (IRI)
+PREFIX edu: <http://example.org/edu#>
+
+SELECT ?student_name ?weak_topic ?score ?course
+       (GROUP_CONCAT(DISTINCT ?blocked_name; separator=", ") AS ?blocks)
+WHERE {
+  ?student edu:enrolledIn ?c ; edu:name ?student_name .
+  ?c edu:code ?course ; edu:covers ?blocked .
+  ?blocked edu:requires+ ?prerequisite ; edu:name ?blocked_name .
+  ?assessment edu:student ?student ; edu:topic ?prerequisite ; edu:score ?score .
+  FILTER(?score < ?threshold)
+  ?prerequisite edu:name ?weak_topic .
+}
+GROUP BY ?student_name ?weak_topic ?score ?course
+ORDER BY ?student_name ?score

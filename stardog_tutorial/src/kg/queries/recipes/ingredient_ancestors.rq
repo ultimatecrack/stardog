@@ -1,0 +1,16 @@
+# All categories above an ingredient, at any depth, with the number of steps up.
+# Parameters: ?ingredient (IRI, e.g. ingredient:parmesan-cheese)
+PREFIX rec:  <http://example.org/recipes#>
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+
+SELECT ?category (COUNT(?step) AS ?levels_up)
+WHERE {
+  ?ingredient rec:inCategory ?direct .
+  ?direct skos:broader* ?ancestor .
+  ?ancestor rec:name ?category .
+  # every category passed on the way from ?direct up to ?ancestor counts as one level
+  ?direct skos:broader* ?step .
+  ?step skos:broader* ?ancestor .
+}
+GROUP BY ?category
+ORDER BY ?levels_up

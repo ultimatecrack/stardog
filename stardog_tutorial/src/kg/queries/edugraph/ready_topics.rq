@@ -1,0 +1,13 @@
+# Topics a student is ready to start: not passed yet, and every direct prerequisite passed.
+# Parameters: ?student (IRI, e.g. student:S023)
+# Needs edu:passed: materialized by the Chapter 18 pipeline, or inferred with reasoning (EduGraph ontology 1.1).
+PREFIX edu: <http://example.org/edu#>
+
+SELECT ?id ?name ?level
+WHERE {
+  ?t a edu:Topic ; edu:name ?name ; edu:level ?level .
+  FILTER NOT EXISTS { ?student edu:passed ?t }
+  FILTER NOT EXISTS { ?t edu:requires ?p  FILTER NOT EXISTS { ?student edu:passed ?p } }
+  BIND(STRAFTER(STR(?t), "/topic/") AS ?id)
+}
+ORDER BY ?level ?name
