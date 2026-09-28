@@ -21,16 +21,19 @@ PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 """
 
 
-def select(conn, where, extra=''):
+DATA_GRAPH = 'urn:SupplyChain:data'
+
+
+def select(conn, algorithm, prop, extra=''):
+  # Name both graphs explicitly. Querying the union of every graph instead would also pick up
+  # the tutorial's what-if results, mixing two scenarios into one table.
   query = f"""{PREFIX}
   SELECT ?id ?name ?type ?region ?value
-  FROM <tag:stardog:api:context:all>
-  {{
-    ?f sc:name ?name ; sc:region ?region ; rdf:type ?t .
-    FILTER(?t != sc:Facility)
+  WHERE {{
+    GRAPH <urn:SupplyChain:analytics:{algorithm}> {{ ?f sc:{prop} ?value }}
+    GRAPH <{DATA_GRAPH}> {{ ?f sc:name ?name ; sc:region ?region ; rdf:type ?t }}
     BIND(STRAFTER(STR(?f), '#') AS ?id)
     BIND(STRAFTER(STR(?t), '#') AS ?type)
-    {where}
   }} {extra}"""
   rows = conn.select(query)['results']['bindings']
   return [{k: v['value'] for k, v in r.items()} for r in rows]
@@ -49,28 +52,29 @@ def title(text):
 
 with stardog.Connection(DB_NAME, **conn_details) as conn:
   title('PageRank: most critical facilities (disruption here hurts the most)')
-  rows = select(conn, '?f sc:pageRank ?value .', 'ORDER BY DESC(xsd:double(?value)) LIMIT 8')
+  rows = select(conn, 'PageRank', 'pageRank', 'ORDER BY DESC(xsd:double(?value)) LIMIT 8')
   for r in rows:
     print(f"  {float(r['value']):7.3f}  {r['id']:4} {r['name']} ({r['type']})")
 
   title('Connected Components: independent networks')
-  for i, members in enumerate(groups(select(conn, '?f sc:component ?value .')), 1):
+  for i, members in enumerate(groups(select(conn, 'ConnectedComponents', 'component')), 1):
     regions = sorted({m['region'] for m in members})
     print(f'  Network {i}: {len(members)} facilities, regions: {", ".join(regions)}')
 
   title('Strongly Connected Components: closed loops (goods can come back around)')
-  loops = [g for g in groups(select(conn, '?f sc:stronglyConnectedComponent ?value .')) if len(g) > 1]
+  loops = [g for g in groups(select(conn, 'StronglyConnectedComponents', 'stronglyConnectedComponent'))
+           if len(g) > 1]
   for members in loops:
     print('  Loop: ' + ', '.join(f"{m['id']} ({m['type']})" for m in members))
   if not loops:
     print('  No loops: every flow is one-way')
 
   title('Label Propagation: logistics communities')
-  for i, members in enumerate(groups(select(conn, '?f sc:community ?value .')), 1):
+  for i, members in enumerate(groups(select(conn, 'LabelPropagation', 'community')), 1):
     print(f'  Community {i}: ' + ', '.join(m['id'] for m in sorted(members, key=lambda m: m['id'])))
 
   title('Triangle Count: route redundancy')
-  rows = select(conn, '?f sc:triangleCount ?value .', 'ORDER BY DESC(xsd:long(?value)) ?id')
+  rows = select(conn, 'TriangleCount', 'triangleCount', 'ORDER BY DESC(xsd:long(?value)) ?id')
   redundant = [r for r in rows if int(r['value']) > 0]
   print('  Facilities with a backup path (in at least one triangle):')
   for r in redundant:

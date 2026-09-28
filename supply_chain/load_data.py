@@ -101,10 +101,18 @@ def load(conn, graph, graph_uri):
            graph_uri=graph_uri)
 
 
+def ensure_database(admin, name=DB_NAME):
+  """Return the database, creating it first if this Stardog server doesn't have it yet."""
+  if name not in [d.name for d in admin.databases()]:
+    admin.new_database(name)
+    print(f'Created database {name}')
+  return admin.database(name)
+
+
 if __name__ == '__main__':
   # Register the model as a named reasoning schema, keeping any others
   with stardog.Admin(**conn_details) as admin:
-    db = admin.database(DB_NAME)
+    db = ensure_database(admin)
     schemas = db.get_options('reasoning.schemas')['reasoning.schemas']
     schemas = [s for s in schemas if not s.startswith(f'{MODEL_NAME}=')] + [f'{MODEL_NAME}={MODEL_GRAPH}']
     db.set_options({'reasoning.schemas': schemas})

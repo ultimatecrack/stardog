@@ -124,6 +124,6 @@ In Studio or Explorer, add `FROM <tag:stardog:api:context:all>` to a query to se
 
 ## Notes
 
-- **Stardog Cloud database limit.** The plan allows only a limited number of databases, so the scripts reuse `STARDOG_DATABASE` rather than creating new ones.
+- **Stardog Cloud database limit.** The plan allows only a limited number of databases, so everything reuses `STARDOG_DATABASE`. `load_data.py` (and the supply chain notebook) recreate that one database if the server no longer has it; nothing ever creates a second one.
 - **Scripts are safe to rerun.** Each script clears and reloads only its own named graphs.
 - **Warning: `quick_start/quick_start.py` deletes and recreates the `STARDOG_DATABASE` database** before loading its data. Running it wipes everything else in that database: the recipe and supply chain graphs, and models published from Designer such as `Recipe_Basic`.
