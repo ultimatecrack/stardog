@@ -183,4 +183,4 @@ stardog_tutorial/
 | 15b | ✅ Written and run (Spark connector runs locally with the portable Java 11 in `tools/`) |
 | 16 | ✅ Written and run (local Ollama; no Voicebox token, so the Voicebox cell is skipped) |
 | 17 | ✅ Written and run (local Ollama qwen2.5:7b; agent conversations cached in `data/edugraph/agent_llm_cache.json`; evaluation: 3/5 plans saved by the basic agent, 4/5 with `order_topics` + orchestrator, no invalid plan ever written) |
-| 18 | Not started |
+| 18 | ✅ Written and run (capstone pipeline, API with pool/cache/`/ask`/`/metrics`, two tenants, dashboard; no cluster on Cloud (`404`), so clustering and cache targets are explained, not run) |

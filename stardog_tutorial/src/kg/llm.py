@@ -175,20 +175,28 @@ def answer_from_rows(question: str, rows, cache: Path | None = None) -> str:
 class GraphRAG:
   """Vector search over entity names -> neighbourhood facts from the graph -> grounded answer."""
 
-  def __init__(self, conn, graphs, schema_name: str | None, entity_query: str, fact_query: str, cache: Path | None = None):
+  INSTRUCTIONS = ('Answer the question using ONLY the facts given (subject | property | value). '
+                  'If the facts are not enough, say so. Be brief; list names exactly as written.')
+
+  def __init__(self, conn, graphs, schema_name: str | None, entity_query: str, fact_query: str, cache: Path | None = None,
+               instructions: str | None = None):
     """entity_query returns ?entity ?label; fact_query returns ?s ?p ?o facts for a bound ?entity (as text).
 
     schema_name: the reasoning model for the fact query, or None to query without reasoning
     (e.g. when the inferences are materialized, Chapter 18).
     """
     self.conn, self.graphs, self.schema_name, self.fact_query, self.cache = conn, graphs, schema_name, fact_query, cache
+    self.instructions = instructions or self.INSTRUCTIONS
     ents = sparql.run_query(conn, entity_query, graphs=graphs)
     self.entities = list(zip(ents.entity, ents.label))
     self.vectors = extraction.embed([label for _, label in self.entities], kind='document')
 
-  def retrieve(self, question: str, k: int = 6) -> list[tuple[str, str, float]]:
+  def retrieve(self, question: str, k: int = 6, margin: float | None = None) -> list[tuple[str, str, float]]:
+    """The k entities closest to the question; with `margin`, only those within `margin` of the best score."""
     q = extraction.embed([question])[0]
     scored = sorted(((extraction.cosine(q, v), e, label) for (e, label), v in zip(self.entities, self.vectors)), reverse=True)
+    if margin is not None:
+      scored = [x for x in scored if x[0] >= scored[0][0] - margin]
     return [(e, label, round(s, 3)) for s, e, label in scored[:k]]
 
   def facts(self, entities: list[str]) -> list[str]:
@@ -200,11 +208,10 @@ class GraphRAG:
       lines += [f'{r.s} | {r.p} | {r.o}' for r in rows.itertuples()]
     return sorted(set(lines))
 
-  def ask(self, question: str, k: int = 6) -> dict:
-    found = self.retrieve(question, k)
+  def ask(self, question: str, k: int = 6, margin: float | None = None) -> dict:
+    found = self.retrieve(question, k, margin)
     facts = self.facts([e for e, _, _ in found])
-    answer = chat([{'role': 'system', 'content': 'Answer the question using ONLY the facts given (subject | property | value). '
-                    'If the facts are not enough, say so. Be brief; list names exactly as written.'},
+    answer = chat([{'role': 'system', 'content': self.instructions},
                    {'role': 'user', 'content': f'Question: {question}\n\nFacts:\n' + '\n'.join(facts)}], cache=self.cache)['content']
     return {'answer': answer, 'retrieved': found, 'facts': facts}
 

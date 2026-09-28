@@ -1,0 +1,18 @@
+{
+ "a8eb05f5e9f0437c027e": {
+  "role": "assistant",
+  "content": "Before learning neural networks, you need to learn Calculus basics, Classification, and have an Algebra refresher."
+ },
+ "5fe269d36b1b1598a263": {
+  "role": "assistant",
+  "content": "To learn about linear regression, you should read the \"Understanding linear regression\" lesson. You should first know Linear algebra and Statistics."
+ },
+ "10b372b83cfbbcdcfa86": {
+  "role": "assistant",
+  "content": "Clustering is covered by the Machine Learning course and has an advanced level (3)."
+ },
+ "f19c8e04943dffd12571": {
+  "role": "assistant",
+  "content": "I don't know how to cook a good risotto based on the provided facts."
+ }
+}

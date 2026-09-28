@@ -14,9 +14,9 @@ Settings (environment variables, all optional):
     EDUGRAPH_CACHE_SECONDS  cache query results for this many seconds (default 0 = off)       (Chapter 18)
     EDUGRAPH_LLM_CACHE      JSON file caching LLM answers for /ask (optional)                  (Chapter 18)
 """
+import math
 import os
 import queue
-import statistics
 import sys
 import time
 from collections import defaultdict, deque
@@ -194,6 +194,11 @@ def courses(conn=Depends(connection)):
 
 
 _rag = {}
+ASK_INSTRUCTIONS = '''You are a study advisor for a data-science school. Answer the student's question in 1 to 3 plain sentences,
+using ONLY the facts below. Each fact reads "subject | relation | value", in that direction: for example
+"Linear regression | requires (directly) | Statistics" means Statistics must be learned before Linear regression.
+Name topics, lessons and courses exactly as written. Do not list facts, and do not add anything the facts don't say.
+If the facts don't answer the question, say that you don't know.'''
 
 
 @app.get('/ask')
@@ -203,10 +208,11 @@ def ask(question: str = Query(..., min_length=5, max_length=300, examples=['What
   if not extraction.ollama_available():
     raise HTTPException(503, 'The language model is not available')
   if 'rag' not in _rag:                                  # built on first use: embeds every entity label once
-    _rag['rag'] = llm.GraphRAG(conn, GRAPHS, None, 'edugraph/graphrag_entities', 'edugraph/graphrag_facts', cache=LLM_CACHE)
+    _rag['rag'] = llm.GraphRAG(conn, GRAPHS, None, 'edugraph/graphrag_entities', 'edugraph/graphrag_facts',
+                               cache=LLM_CACHE, instructions=ASK_INSTRUCTIONS)
   rag = _rag['rag']
   rag.conn = conn                                        # this request's connection
-  result = rag.ask(question, k=4)
+  result = rag.ask(question, k=4, margin=0.1)            # only entities close to the best match: less noise
   return {'question': question, 'answer': result['answer'],
           'sources': [label for _, label, _ in result['retrieved']], 'facts_used': len(result['facts'])}
 
@@ -219,9 +225,9 @@ def metrics(x_api_key: str | None = Header(None, include_in_schema=False)):
   routes = {}
   for name, s in STATS['routes'].items():
     ms = sorted(s['ms'])
+    rank = lambda q: round(ms[math.ceil(q * len(ms)) - 1]) if ms else None       # nearest-rank percentile
     routes[name] = {'requests': s['requests'], 'client_errors': s['client_errors'], 'server_errors': s['server_errors'],
-                    'p50_ms': round(statistics.median(ms)) if ms else None,
-                    'p95_ms': round(ms[int(0.95 * (len(ms) - 1))]) if ms else None}
+                    'p50_ms': rank(0.5), 'p95_ms': rank(0.95)}
   lookups = STATS['cache_hits'] + STATS['cache_misses']
   return {'uptime_s': round(time.time() - STATS['started']), 'routes': routes,
           'cache': {'seconds': CACHE_SECONDS, 'hits': STATS['cache_hits'], 'misses': STATS['cache_misses'],
